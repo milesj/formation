@@ -4,11 +4,11 @@
  *
  * A form validation and builder class that can build form elements and then validates form inputs for errors and returns a cleaned result.
  * 
- * @author 		Miles Johnson - www.milesj.me
+ * @author		Miles Johnson - www.milesj.me
  * @copyright	Copyright 2006-2009, Miles Johnson, Inc.
- * @license 	http://www.opensource.org/licenses/mit-license.php - Licensed under The MIT License
- * @package 	Formation - Builder and Validator
- * @version   	v2.2
+ * @license		http://www.opensource.org/licenses/mit-license.php - Licensed under The MIT License
+ * @package		Formation - Builder and Validator
+ * @version		v2.2
  * @link		www.milesj.me/resources/script/form-manager
  */
  
@@ -16,6 +16,7 @@ class Form extends Formation {
 
 	/**
 	 * Current version: www.milesj.me/files/logs/form-manager
+	 *
 	 * @access public
 	 * @var int
 	 */
@@ -52,18 +53,18 @@ class Form extends Formation {
 	 * @var array
 	 */
 	private $__tags = array( 
-		'form_open' 		=> '<form%s>',
-		'form_close' 		=> '</form>',
-		'input' 			=> array('<input%s>', '<input%s />'),
-		'textarea' 			=> '<textarea%s>%s</textarea>',
-		'select' 			=> '<select%s>%s</select>',
-		'option' 			=> '<option%s>%s</option>',
-		'optgroup_open' 	=> '<optgroup%s>',
-		'optgroup_close'	=> '</optgroup>',
-		'fieldset_open'		=> '<fieldset%s>',
-		'fieldset_close'	=> '</fieldset>',
-		'legend'			=> '<legend%s>%s</legend>',
-		'label'				=> '<label%s>%s</label>'
+		'form_open'		=> '<form%s>',
+		'form_close'	=> '</form>',
+		'input'			=> array('<input%s>', '<input%s />'),
+		'textarea'		=> '<textarea%s>%s</textarea>',
+		'select'		=> '<select%s>%s</select>',
+		'option'		=> '<option%s>%s</option>',
+		'optgroup_open'	=> '<optgroup%s>',
+		'optgroup_close'=> '</optgroup>',
+		'fieldset_open'	=> '<fieldset%s>',
+		'fieldset_close'=> '</fieldset>',
+		'legend'		=> '<legend%s>%s</legend>',
+		'label'			=> '<label%s>%s</label>'
 	);
 	
 	/**
