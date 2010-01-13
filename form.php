@@ -1,21 +1,19 @@
 <?php
 /**
- * form.php
+ * Formation - Builder and Validator
  *
  * A form validation and builder class that can build form elements and then validates form inputs for errors and returns a cleaned result.
  * 
  * @author		Miles Johnson - www.milesj.me
  * @copyright	Copyright 2006-2009, Miles Johnson, Inc.
  * @license		http://www.opensource.org/licenses/mit-license.php - Licensed under The MIT License
- * @package		Formation - Builder and Validator
- * @version		v2.2
  * @link		www.milesj.me/resources/script/form-manager
  */
  
 class Form extends Formation { 
 
 	/**
-	 * Current version: www.milesj.me/files/logs/form-manager
+	 * Current version: www.milesj.me/resources/logs/form-manager
 	 *
 	 * @access public
 	 * @var int
