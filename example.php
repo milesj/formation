@@ -3,9 +3,14 @@
 // Turn on error reporting
 error_reporting(E_ALL);
 
+function debug($var) {
+    echo '<pre>'. print_r($var, true) .'</pre>';
+}
+
 // Include and initialize
-require_once('form.php'); 
-$form = new Form();
+require_once('form.php');
+
+$form = new Form('User', true);
 
 // Check to see if form is posted
 if ($form->process($_POST)) {
@@ -66,29 +71,40 @@ if (!empty($errors)) { ?>
 <?php } ?>
 
 <?php // Create form
-echo $form->create('Login'); ?>
+echo $form->create(array('type' => 'file', 'legend' => 'Formation')); ?>
 
-<p><?php echo $form->label('name', 'Name'); ?><br />
-<?php echo $form->input('name'); ?></p>
+<p><?php echo $form->label('name', 'Name:'); ?><br />
+<?php echo $form->text('name'); ?></p>
 
-<p><?php echo $form->label('email', 'Email'); ?><br />
-<?php echo $form->input('email'); ?></p>
+<p><?php echo $form->label('email', 'Email:'); ?><br />
+<?php echo $form->text('email'); ?></p>
 
-<p><?php echo $form->label('password', 'Password'); ?><br />
-<?php echo $form->input('password', array('type' => 'password')); ?></p>
+<p><?php echo $form->label('password', 'Password:'); ?><br />
+<?php echo $form->password('password'); ?></p>
 
-<p><?php echo $form->label('website', 'Website'); ?><br />
-<?php echo $form->input('website'); ?></p>
+<p><?php echo $form->label('about', 'About Me:'); ?><br />
+<?php echo $form->textarea('about'); ?></p>
 
-<p><?php echo $form->label('age', 'Age'); ?><br />
-<?php echo $form->input('age', array('size' => 1)); ?></p>
+<p><?php echo $form->label('website', 'Website:'); ?><br />
+<?php echo $form->text('website'); ?></p>
 
-<p><?php echo $form->input('tos', array('type' => 'checkbox', 'value' => 'yes')); ?>
+<p><?php echo $form->label('photo', 'Photo:'); ?><br />
+<?php echo $form->file('photo'); ?></p>
+
+<p><?php echo $form->label('gender', 'Gender:'); ?><br />
+<?php echo $form->select('gender', array('male' => 'Male', 'female' => 'Female'), array('multiple' => true)); ?></p>
+
+<p><?php echo $form->label('age', 'Age:'); ?><br />
+<?php echo $form->text('age', array('size' => 1)); ?></p>
+
+<p><?php echo $form->checkbox('tos', array('value' => 'yes')); ?>
 <?php echo $form->label('tos', 'Do you agree to the Terms of Service?'); ?></p>
 
 <p>
-    <?php echo $form->input('gender', array('type' => 'radio', 'value' => 'male', 'id' => 'male', 'default' => true)); ?> Male
-    <?php echo $form->input('gender', array('type' => 'radio', 'value' => 'female', 'id' => 'female')); ?> Female
+    <?php echo $form->label('color', 'Color:'); ?><br />
+    <?php foreach (array('red', 'green', 'blue', 'yellow', 'orange') as $color) {
+        echo $form->checkbox('color', array('value' => $color, 'default' => 'green', 'multiple' => true)); ?> <?php echo ucfirst($color);
+    } ?>
 </p>	
 
 <p><?php echo $form->submit('Submit'); ?>
