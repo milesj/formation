@@ -18,7 +18,7 @@ class Form {
 	 * @access public
 	 * @var int
 	 */
-	public $version = '2.2';
+	public $version = '2.5';
 
 	/**
 	 * The current doctype.
