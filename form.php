@@ -137,20 +137,25 @@ class Form {
 	 * @access public
 	 * @param string $toClean
 	 * @param boolean $removeHtml
+     * @param boolean $escapeQuotes
 	 * @return string
 	 * @static
 	 */
-	public static function cleanse($toClean, $removeHtml = true) {
+	public static function cleanse($toClean, $removeHtml = true, $escapeQuotes = false) {
 		if (is_array($toClean)) {
 			foreach ($toClean as $key => $value) {
 				$toClean[$key] = self::cleanse($value, $removeHtml);
 			}
 		} else {
-			$toClean = trim(urldecode($toClean));
+			$toClean = trim($toClean);
 
-			if ($removeHtml === true) {
-				$toClean = htmlentities(strip_tags($toClean), ENT_NOQUOTES, 'UTF-8');
+			if ($removeHtml) {
+                $toClean = htmlentities(strip_tags($toClean), ENT_NOQUOTES, 'UTF-8');
 			}
+
+            if ($escapeQuotes) {
+                $toClean = str_replace('"', '&quot;', $toClean);
+            }
 		}
 
 		return $toClean;
@@ -218,10 +223,10 @@ class Form {
         // Output
 		$output = sprintf($this->_tag('form_open'), $this->_attributes($attributes));
         
-		if ($this->_doctype == 'xhtml') {
+		if ($this->_doctype == 'xhtml' || $legend) {
 			$output .= sprintf($this->_tag('fieldset_open'), '');
 			
-			if (isset($legend)) {
+			if ($legend) {
 				$output .= sprintf($this->_tag('legend'), '', $legend);
 			}
 		}
@@ -255,6 +260,8 @@ class Form {
             'name' => $name,
             'type' => 'file'
         ), $attributes);
+
+        unset($attributes['value']);
 
 		return sprintf($this->_tag('input'), $this->_attributes($attributes));
     }
@@ -554,7 +561,6 @@ class Form {
 	 * @return string
 	 */
 	public function value($type, $input, $value = '', $default = '') {
-		$input = preg_replace('/[^a-zA-Z0-9]/i', '', $input);
 		$input = isset($this->__post[$input]) ? $this->__post[$input] : null;
 		$output = '';
 
@@ -566,7 +572,7 @@ class Form {
 			case 'hidden':
 			case 'file':
 				if (!empty($input)) {
-					$output = self::cleanse($input);
+					$output = ($type == 'textarea') ? $input : addslashes($input);
 				} else {
 				 	$output = isset($default) ? $default : '';
 				}
@@ -669,6 +675,10 @@ class Form {
 
         if (!isset($attributes['id'])) {
             $attributes['id'] = $this->_model . $this->inflect($params['name']);
+        }
+
+        if ($params['type'] == 'radio') {
+            $attributes['id'] .= $this->inflect($attributes['value']);
         }
 
         // Defaults and value
@@ -983,7 +993,7 @@ class Formation {
      * @static
      */
 	public static function isEmail($input, $message) {
-		return !preg_match('/^[0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input)) ? false : $input;
+		return !preg_match('/^[\+0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input)) ? false : $input;
 	}
 	
 	/**
