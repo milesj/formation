@@ -78,8 +78,23 @@ class Form {
 		'fieldset_open'	=> '<fieldset%s>',
 		'fieldset_close'=> '</fieldset>',
 		'legend'		=> '<legend%s>%s</legend>',
-		'label'			=> '<label%s>%s</label>'
+		'label'			=> '<label%s>%s</label>',
+        'button'        => '<button%s>%s</button>'
 	);
+
+	/**
+	 * Form button.
+	 *
+	 * @access public
+	 * @param string $text
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function button($text, $attributes = array()) {
+		$attributes += array('type' => 'button');
+
+		return sprintf($this->_tag('button'), $this->_attributes($attributes), $text);
+	}
 	
 	/**
 	 * Initialize the class.
@@ -98,7 +113,7 @@ class Form {
 
 		$this->_model = $this->inflect($model);
 
-		if ($xhtml === true) {
+		if ($xhtml) {
 			$this->_doctype = 'xhtml';
 		}
 	}
@@ -440,11 +455,10 @@ class Form {
 	public function reset($text = 'Reset', $attributes = array()) {
 		$attributes = $attributes + array(
 			'id' 	=> $this->_model .'ResetButton',
-			'type' 	=> 'reset',
-			'value' => $text
+			'type' 	=> 'reset'
 		);
 		
-		return sprintf($this->_tag('input'), $this->_attributes($attributes));
+		return sprintf($this->_tag('button'), $this->_attributes($attributes), $text);
 	}
 
     /**
@@ -484,11 +498,10 @@ class Form {
 	public function submit($text = 'Submit', $attributes = array()) {
 		$attributes = $attributes + array(
 			'id' 	=> $this->_model .'SubmitButton',
-			'type' 	=> 'submit',
-			'value' => $text
+			'type' 	=> 'submit'
 		);
 		
-		return sprintf($this->_tag('input'), $this->_attributes($attributes));
+		return sprintf($this->_tag('button'), $this->_attributes($attributes), $text);
 	}
 
     /**

@@ -83,7 +83,8 @@ if ($form->process($_POST)) {
     <?php }
 
     // Create form
-    echo $form->create(array('type' => 'file', 'legend' => 'Formation')); ?>
+    echo $form->create(array('type' => 'app', 'legend' => 'Formation'));
+    echo $form->hidden('hidden', array('value' => 'Hidden value')); ?>
 
     <p><?php echo $form->label('text1', 'Text 1: Required, Alpha-numeric, Punctuation'); ?><br />
     <?php echo $form->text('text1'); ?></p>
@@ -129,8 +130,11 @@ if ($form->process($_POST)) {
         } ?>
     </p>
 
-    <p><?php echo $form->submit('Submit'); ?>
-    <?php echo $form->reset('Reset', array('class' => 'button'))?></p>
+    <p>
+        <?php echo $form->submit('Submit'); ?>
+        <?php echo $form->reset('Reset')?>
+        <?php echo $form->button('Button', array('class' => 'button')); ?>
+    </p>
 
     <?php // Close form
     echo $form->close(); ?>
