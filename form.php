@@ -81,20 +81,6 @@ class Form {
 		'label'			=> '<label%s>%s</label>',
         'button'        => '<button%s>%s</button>'
 	);
-
-	/**
-	 * Form button.
-	 *
-	 * @access public
-	 * @param string $text
-	 * @param array $attributes
-	 * @return string
-	 */
-	public function button($text, $attributes = array()) {
-		$attributes += array('type' => 'button');
-
-		return sprintf($this->_tag('button'), $this->_attributes($attributes), $text);
-	}
 	
 	/**
 	 * Initialize the class.
@@ -119,14 +105,29 @@ class Form {
 	}
 
 	/**
+	 * Form button.
+	 *
+	 * @access public
+	 * @param string $text
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function button($text, $attributes = array()) {
+		$attributes += array('type' => 'button');
+
+		return sprintf($this->_tag('button'), $this->_attributes($attributes), $text);
+	}
+
+	/**
 	 * Filters and cleans each input and applies it to the cleaned array.
 	 *
 	 * @access public
 	 * @param array $inputs
+     * @param boolean $escapeQuotes
 	 * @param boolean $removeHtml
 	 * @return array
 	 */
-	public function clean($inputs = '', $removeHtml = true) {
+	public function clean($inputs = '', $escapeQuotes = true, $removeHtml = false) {
 		if (empty($inputs)) {
 			$inputs = $this->__post;
 		}
@@ -135,7 +136,7 @@ class Form {
 			foreach ($inputs as $input => $value) {
 				if (array_key_exists($input, $this->__post)) {
 					if ($this->__post[$input] != '') {
-						$this->__cleaned[$input] = $this->cleanse($this->__post[$input], $removeHtml);
+						$this->__cleaned[$input] = $this->cleanse($this->__post[$input], $escapeQuotes, $removeHtml);
 					} else {
 						$this->__cleaned[$input] = '';
 					}
@@ -151,26 +152,26 @@ class Form {
 	 *
 	 * @access public
 	 * @param string $toClean
-	 * @param boolean $removeHtml
      * @param boolean $escapeQuotes
+	 * @param boolean $removeHtml
 	 * @return string
 	 * @static
 	 */
-	public static function cleanse($toClean, $removeHtml = true, $escapeQuotes = false) {
+	public static function cleanse($toClean, $escapeQuotes = true, $removeHtml = false) {
 		if (is_array($toClean)) {
 			foreach ($toClean as $key => $value) {
-				$toClean[$key] = self::cleanse($value, $removeHtml);
+				$toClean[$key] = self::cleanse($value, $escapeQuotes, $removeHtml);
 			}
 		} else {
 			$toClean = trim($toClean);
 
-			if ($removeHtml) {
-                $toClean = htmlentities(strip_tags($toClean), ENT_NOQUOTES, 'UTF-8');
-			}
-
-            if ($escapeQuotes) {
-                $toClean = str_replace('"', '&quot;', $toClean);
+            if ($removeHtml) {
+                $toClean = strip_tags($toClean);
             }
+
+			if ($escapeQuotes) {
+                $toClean = htmlentities($toClean, ENT_COMPAT, 'UTF-8');
+			}
 		}
 
 		return $toClean;
@@ -417,8 +418,6 @@ class Form {
 	public function process($post, $submit = null) {
 		$this->__post = isset($post[$this->_model]) ? $post[$this->_model] : array();
 
-        debug($post);
-
 		if ((!empty($submit) && isset($this->__post[$submit])) || (empty($submit) && !empty($this->__post))) {
 			return true;
 		} else {
@@ -585,7 +584,7 @@ class Form {
 			case 'hidden':
 			case 'file':
 				if (!empty($input)) {
-					$output = ($type == 'textarea') ? $input : addslashes($input);
+					$output = self::cleanse($input);
 				} else {
 				 	$output = isset($default) ? $default : '';
 				}
@@ -631,7 +630,7 @@ class Form {
 		if (!empty($attributes)) {
 			foreach ($attributes as $att => $value) {
 				if ($att != 'value') {
-					$value = htmlentities($value, ENT_COMPAT, 'UTF-8');
+					$value = self::cleanse($value, true, true);
 				}
 
 				$clean[] = $att .'="'. $value .'"';

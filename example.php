@@ -55,8 +55,7 @@ if ($form->process($_POST)) {
 	
 	// Validate form and pass
 	if ($form->validates($schema)) {
-		$clean = $form->clean();
-		// Data is ready for use
+		debug($form->clean());
 	}
 	
 	$errors = $form->getErrors();
