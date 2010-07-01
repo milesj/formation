@@ -585,20 +585,18 @@ class Form {
 				}
 			break;
             case 'select':
+                $output = !empty($input) ? $input : $default;
+            break;
 			case 'checkbox':
 				$output = false;
 
-				if (isset($input) && is_array($input)) {
+				if (is_array($input)) {
 					$output = in_array($value, $input);
 				} else {
-					if (isset($input) && $input == $value) {
+					if ($input == $value) {
 						$output = true;
 					} else {
-                        if ($type == 'checkbox') {
-                            $output = ($value == $default || $default === true);
-                        } else {
-                            $output = ($value == $default);
-                        }
+                        $output = ($value == $default || $default === true);
 					}
 				}
 			break;
@@ -620,7 +618,7 @@ class Form {
 		if (!empty($attributes)) {
 			foreach ($attributes as $att => $value) {
 				if ($att != 'value') {
-					$value = htmlentities($value, ENT_NOQUOTES, 'UTF-8');
+					$value = htmlentities($value, ENT_COMPAT, 'UTF-8');
 				}
 
 				$clean[] = $att .'="'. $value .'"';
@@ -692,11 +690,7 @@ class Form {
         $result = $this->value($params['type'], $params['name'], $value, $default);
 
         if ($result === true) {
-            if ($params['type'] == 'checkbox' || $params['type'] == 'radio') {
-                $attributes['checked'] = 'checked';
-            } else if ($params['type'] == 'select') {
-                $attributes['selected'] = 'selected';
-            }
+            $attributes['checked'] = 'checked';
         } else if (!empty($result)) {
             $attributes['value'] = $result;
         } else {
@@ -710,11 +704,10 @@ class Form {
                     $attributes[$attr] = $attr;
 
                     if ($attr == 'multiple') {
-                        unset($attributes['multiple']);
-                        
                         if ($params['type'] == 'checkbox') {
                             $attributes['name'] .= '[]';
                             $attributes['id'] .= $this->inflect($attributes['value']);
+                            unset($attributes['multiple']);
 
                         } else if ($params['type'] == 'select') {
                             $attributes['name'] .= '[]';
@@ -762,7 +755,7 @@ class Form {
                 } else {
                     $attributes = array('value' => $value);
 
-                    if ($value == $selected) {
+                    if (($value == $selected) || (is_array($selected) && in_array($value, $selected))) {
                         $attributes['selected'] = 'selected';
                     }
 

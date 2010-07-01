@@ -118,7 +118,7 @@ if ($form->process($_POST)) {
     <p>
         <?php echo $form->label('checkbox2', 'Checkbox: Multiple'); ?><br />
         <?php foreach ($options as $key => $value) {
-            echo $form->checkbox('checkbox2', array('value' => $key, 'default' => 'green', 'multiple' => true)) .' '. $value;
+            echo $form->checkbox('checkbox2', array('value' => $key, 'multiple' => true)) .' '. $value;
         } ?>
     </p>
 
