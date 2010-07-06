@@ -18,28 +18,28 @@ $options = array(
 
 // Check to see if form is posted
 if ($form->process()) {
-	$schema = array(
-		'text1' => array(
-			'notEmpty' => 'Text 1 is required',
-			'isAllChars' => 'Text 1 contains invalid characters'
-		),
+    $schema = array(
+        'text1' => array(
+            'notEmpty' => 'Text 1 is required',
+            'isAllChars' => 'Text 1 contains invalid characters'
+        ),
         'text2' => array(
-			'notEmpty' => 'Text 2 is required',
-			'isAlpha' => 'Text 2 may only contain letters'
-		),
-		'email' => array(
-			'notEmpty' => 'Email is required',
-			'isEmail' => 'Email is invalid'
-		),
-		'website' => array(
-			'isWebsite' => 'Website URL is invalid',
-			'required' => false
-		),
-		'password' => array(
-			'notEmpty' => 'Password is required',
-			'isAlnum' => 'Password may only be alpha-numeric',
-			'checkLength' => array('Password must be between 6-12 characters', 12, 6)
-		),
+            'notEmpty' => 'Text 2 is required',
+            'isAlpha' => 'Text 2 may only contain letters'
+        ),
+        'email' => array(
+            'notEmpty' => 'Email is required',
+            'isEmail' => 'Email is invalid'
+        ),
+        'website' => array(
+            'isWebsite' => 'Website URL is invalid',
+            'required' => false
+        ),
+        'password' => array(
+            'notEmpty' => 'Password is required',
+            'isAlnum' => 'Password may only be alpha-numeric',
+            'checkLength' => array('Password must be between 6-12 characters', 12, 6)
+        ),
         'decimal' => array(
             'isDecimal' => 'Decimal must be 2 points',
             'required' => false
@@ -54,14 +54,14 @@ if ($form->process()) {
         'file' => array(
             'isFile' => 'File is required'
         )
-	);
-	
-	// Validate form and pass
-	if ($form->validates($schema)) {
-		debug($form->clean());
-	}
-	
-	$errors = $form->getErrors();
+    );
+
+    // Validate form and pass
+    if ($form->validates($schema)) {
+        debug($form->clean());
+    }
+
+    $errors = $form->getErrors();
 } ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -74,14 +74,14 @@ if ($form->process()) {
 </style>
 </head>
 <body>
-    
+
     <?php // Form errors
     if (!empty($errors)) { ?>
-    <ul>
-        <?php foreach ($errors as $error) { ?>
-        <li><?php echo $error; ?></li>
-        <?php } ?>
-    </ul>
+        <ul>
+            <?php foreach ($errors as $error) { ?>
+                <li><?php echo $error; ?></li>
+            <?php } ?>
+        </ul>
     <?php }
 
     // Create form

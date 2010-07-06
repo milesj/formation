@@ -1,10 +1,10 @@
-Formation v2.8 - Form Management
+Formation v3.0 - Form Management
 ********************************
 
 Requirements
 ============
 
-	* PHP 5.2.x
+    * PHP 5.2.x
 
 Features
 ========
@@ -21,5 +21,5 @@ Features
 Documentation
 =============
 
-	* http://www.milesj.me/resources/script/numword
+    * http://milesj.me/resources/logs/form-manager
 
