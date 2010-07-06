@@ -17,7 +17,7 @@ $options = array(
 );
 
 // Check to see if form is posted
-if ($form->process($_POST)) {
+if ($form->process()) {
 	$schema = array(
 		'text1' => array(
 			'notEmpty' => 'Text 1 is required',
@@ -82,7 +82,7 @@ if ($form->process($_POST)) {
     <?php }
 
     // Create form
-    echo $form->create(array('type' => 'app', 'legend' => 'Formation'));
+    echo $form->create(array('type' => 'file', 'legend' => 'Formation'));
     echo $form->hidden('hidden', array('value' => 'Hidden value')); ?>
 
     <p><?php echo $form->label('text1', 'Text 1: Required, Alpha-numeric, Punctuation'); ?><br />

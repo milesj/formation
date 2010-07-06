@@ -18,23 +18,19 @@ class Form {
 	 * @access public
 	 * @var int
 	 */
-	public $version = '2.5';
+	public $version = '2.7';
 
 	/**
-	 * The current doctype.
+	 * Configuration settings.
 	 *
 	 * @access protected
 	 * @var string
 	 */
-	protected $_doctype = 'html';
-
-    /**
-	 * The current model.
-	 *
-	 * @access protected
-	 * @var string
-	 */
-	protected $_model;
+	protected $_config = array(
+        'doctype' => 'html',
+        'legend' => false,
+        'model' => 'Form'
+    );
 
 	/**
 	 * Array of all cleaned post inputs.
@@ -97,10 +93,10 @@ class Form {
 			$model = 'Form';
 		}
 
-		$this->_model = $this->inflect($model);
+		$this->_config['model'] = $this->inflect($model);
 
 		if ($xhtml) {
-			$this->_doctype = 'xhtml';
+			$this->_config['doctype'] = 'xhtml';
 		}
 	}
 
@@ -186,7 +182,7 @@ class Form {
 	public function close() {
 		$output = $this->_tag('form_close');
 
-		if ($this->_doctype == 'xhtml') {
+		if ($this->_config['doctype'] == 'xhtml' || $this->_config['legend']) {
 			$output = $this->_tag('fieldset_close') . $output;
 		}
         
@@ -219,7 +215,7 @@ class Form {
 	 */
 	public function create($attributes = array()) {
 		$attributes = $attributes + array(
-			'id' => $this->_model .'Form',
+			'id' => $this->_config['model'] .'Form',
 			'action' => '',
 			'method' => 'post'
 		);
@@ -239,11 +235,12 @@ class Form {
         // Output
 		$output = sprintf($this->_tag('form_open'), $this->_attributes($attributes));
         
-		if ($this->_doctype == 'xhtml' || $legend) {
+		if ($this->_config['doctype'] == 'xhtml' || $legend) {
 			$output .= sprintf($this->_tag('fieldset_open'), '');
 			
 			if ($legend) {
 				$output .= sprintf($this->_tag('legend'), '', $legend);
+                $this->_config['legend'] = true;
 			}
 		}
 		
@@ -277,7 +274,7 @@ class Form {
             'type' => 'file'
         ), $attributes);
 
-        unset($attributes['value']);
+        //unset($attributes['value']);
 
 		return sprintf($this->_tag('input'), $this->_attributes($attributes));
     }
@@ -385,7 +382,7 @@ class Form {
 	 * @return string
 	 */
 	public function label($name, $title, $attributes = array()) {
-		$attributes = $attributes + array('for' => $this->_model . $this->inflect($name));
+		$attributes = $attributes + array('for' => $this->_config['model'] . $this->inflect($name));
 		
 		return sprintf($this->_tag('label'), $this->_attributes($attributes), $title);
 	}
@@ -415,8 +412,19 @@ class Form {
 	 * @param string $submit 	- Name of the submit button (optional)
 	 * @return boolean
 	 */
-	public function process($post, $submit = null) {
-		$this->__post = isset($post[$this->_model]) ? $post[$this->_model] : array();
+	public function process($post = array(), $submit = null) {
+        if (empty($post)) {
+            $post = $_POST;
+        }
+
+        if (!empty($_FILES)) {
+            $post[$this->_config['model']] = $this->_files() + $post[$this->_config['model']];
+        }
+
+		$this->__post = isset($post[$this->_config['model']]) ? $post[$this->_config['model']] : array();
+
+        debug($post);
+        debug($_FILES);
 
 		if ((!empty($submit) && isset($this->__post[$submit])) || (empty($submit) && !empty($this->__post))) {
 			return true;
@@ -453,7 +461,7 @@ class Form {
 	 */
 	public function reset($text = 'Reset', $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' 	=> $this->_model .'ResetButton',
+			'id' 	=> $this->_config['model'] .'ResetButton',
 			'type' 	=> 'reset'
 		);
 		
@@ -496,7 +504,7 @@ class Form {
 	 */
 	public function submit($text = 'Submit', $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' 	=> $this->_model .'SubmitButton',
+			'id' 	=> $this->_config['model'] .'SubmitButton',
 			'type' 	=> 'submit'
 		);
 		
@@ -672,6 +680,26 @@ class Form {
 	}
 
     /**
+     * Reformat the $_FILES array.
+     *
+     * @access protected
+     * @return array
+     */
+    protected function _files() {
+        $clean = array();
+
+        foreach ($_FILES as $model => $data) {
+            foreach ($data as $key => $values) {
+                foreach ($values as $field => $value) {
+                    $clean[$field][$key] = $value;
+                }
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
      * Process and prepare all fields with default data.
      *
      * @access protected
@@ -681,10 +709,10 @@ class Form {
      */
     protected function _input($params, $attributes = array()) {
         $attributes = $attributes + $params;
-        $attributes['name'] = $this->_model .'['. $attributes['name'] .']';
+        $attributes['name'] = $this->_config['model'] .'['. $attributes['name'] .']';
 
         if (!isset($attributes['id'])) {
-            $attributes['id'] = $this->_model . $this->inflect($params['name']);
+            $attributes['id'] = $this->_config['model'] . $this->inflect($params['name']);
         }
 
         if ($params['type'] == 'radio') {
@@ -788,7 +816,7 @@ class Form {
      */
     protected function _tag($tag) {
         if (is_array($this->__tags[$tag])) {
-            $tag = ($this->_doctype === 'html') ? $this->__tags[$tag][0] : $this->__tags[$tag][1];
+            $tag = ($this->_config['doctype'] === 'html') ? $this->__tags[$tag][0] : $this->__tags[$tag][1];
         } else {
             $tag = $this->__tags[$tag];
         }
