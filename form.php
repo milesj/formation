@@ -18,7 +18,7 @@ class Form {
 	 * @access public
 	 * @var int
 	 */
-	public $version = '2.7';
+	public $version = '3.0';
 
 	/**
 	 * Configuration settings.
@@ -274,7 +274,7 @@ class Form {
             'type' => 'file'
         ), $attributes);
 
-        //unset($attributes['value']);
+        unset($attributes['value']);
 
 		return sprintf($this->_tag('input'), $this->_attributes($attributes));
     }
@@ -372,6 +372,25 @@ class Form {
 		return ucfirst(preg_replace('/[^-_a-zA-Z0-9]/i', '', $value));
 	}
 
+    /**
+     * Image input field.
+     *
+     * @access public
+     * @param string $title
+     * @param array $attributes
+     * @return string
+     */
+    public function image($title, $attributes = array()) {
+        $attributes = $attributes + array(
+			'id' 	=> $this->_config['model'] .'ImageButton',
+            'alt'   => $title,
+			'type' 	=> 'image',
+            'src'   => ''
+		);
+
+		return sprintf($this->_tag('input'), $this->_attributes($attributes));
+    }
+
 	/**
 	 * Form input label.
 	 *
@@ -422,9 +441,6 @@ class Form {
         }
 
 		$this->__post = isset($post[$this->_config['model']]) ? $post[$this->_config['model']] : array();
-
-        debug($post);
-        debug($_FILES);
 
 		if ((!empty($submit) && isset($this->__post[$submit])) || (empty($submit) && !empty($this->__post))) {
 			return true;
@@ -1028,6 +1044,19 @@ class Formation {
 	public static function isEmail($input, $message) {
 		return !preg_match('/^[\+0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input)) ? false : $input;
 	}
+
+    /**
+     * Checks to see if a file input is not empty. Use in place of notEmpty() for files.
+	 *
+	 * @access public
+     * @param string $input
+	 * @param string $message
+     * @return mixed
+     * @static
+     */
+    public static function isFile($input, $message) {
+        return (is_array($input) && empty($input['tmp_name'])) ? false : $input;
+    }
 	
 	/**
      * Checks to see if a value has a correct extension.
@@ -1161,8 +1190,8 @@ class Formation {
 	 * @return mixed
 	 * @static
 	 */
-	public static function notEmpty($input, $message) {
-		return (empty($input) && !isset($input)) ? false : $input;
+    public static function notEmpty($input, $message) {
+        return (empty($input) && !isset($input)) ? false : $input;
 	}
 	
 }

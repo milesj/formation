@@ -50,6 +50,9 @@ if ($form->process()) {
         ),
         'checkbox1' => array(
             'notEmpty' => 'Single checkbox is required'
+        ),
+        'file' => array(
+            'isFile' => 'File is required'
         )
 	);
 	
@@ -106,7 +109,7 @@ if ($form->process()) {
     <p><?php echo $form->label('date', 'Date: Required, mm/dd/yyyy'); ?><br />
     <?php echo $form->text('date'); ?></p>
 
-    <p><?php echo $form->label('file', 'File:'); ?><br />
+    <p><?php echo $form->label('file', 'File: Required'); ?><br />
     <?php echo $form->file('file'); ?></p>
 
     <p><?php echo $form->label('select', 'Select:'); ?><br />
