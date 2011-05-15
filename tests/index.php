@@ -1,4 +1,17 @@
 <?php
+/**
+ * Formation
+ *
+ * A class that builds form elements and then validates their input values for errors.
+ * Once validated, a cleaned data result is returned, or an array of errors are returned.
+ * Furthermore, the system is split into 2 classes, Form which deals with building,
+ * and Formation that contains static methods for validation.
+ *
+ * @author      Miles Johnson - http://milesj.me
+ * @copyright   Copyright 2006-2011, Miles Johnson, Inc.
+ * @license     http://opensource.org/licenses/mit-license.php - Licensed under The MIT License
+ * @link        http://milesj.me/code/php/formation
+ */
 
 // Turn on error reporting
 error_reporting(E_ALL);
@@ -8,7 +21,7 @@ function debug($var) {
 }
 
 // Include and initialize
-require_once('form.php');
+include_once '../formation/Formation.php';
 
 $form = new Form('User');
 $options = array(
@@ -51,8 +64,9 @@ if ($form->process()) {
         'checkbox1' => array(
             'notEmpty' => 'Single checkbox is required'
         ),
-        'file' => array(
-            'isFile' => 'File is required'
+        'file1' => array(
+            'isFile' => 'File 1 is required',
+            'filesize' => 'Filesize is too large'
         )
     );
 
@@ -60,15 +74,13 @@ if ($form->process()) {
     if ($form->validates($schema)) {
         debug($form->clean());
     }
-
-    $errors = $form->getErrors();
 } ?>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<title>Formation Test</title>
-<style type="text/css">
+<title>Formation</title>
+<style>
     body { padding: 15px; font: normal 12px Arial, Tahoma, sans-serif; color: #000; }
     .input-error { border: 1px solid red; }
 </style>
@@ -76,7 +88,7 @@ if ($form->process()) {
 <body>
 
     <?php // Form errors
-    if (!empty($errors)) { ?>
+    if ($errors = $form->getErrors()) { ?>
         <ul>
             <?php foreach ($errors as $error) { ?>
                 <li><?php echo $error; ?></li>
@@ -88,45 +100,48 @@ if ($form->process()) {
     echo $form->create(array('type' => 'file', 'legend' => 'Formation'));
     echo $form->hidden('hidden', array('value' => 'Hidden value')); ?>
 
-    <p><?php echo $form->label('text1', 'Text 1: Required, Alpha-numeric, Punctuation'); ?><br />
+    <p><?php echo $form->label('text1', 'Text 1: Required, Alpha-numeric, Punctuation'); ?><br>
     <?php echo $form->text('text1'); ?></p>
 
-    <p><?php echo $form->label('text2', 'Text 2: Required, Alpha'); ?><br />
+    <p><?php echo $form->label('text2', 'Text 2: Required, Alpha'); ?><br>
     <?php echo $form->text('text2'); ?></p>
 
-    <p><?php echo $form->label('email', 'Email: Required, Email'); ?><br />
+    <p><?php echo $form->label('email', 'Email: Required, Email'); ?><br>
     <?php echo $form->text('email'); ?></p>
 
-    <p><?php echo $form->label('website', 'Website: Optional'); ?><br />
+    <p><?php echo $form->label('website', 'Website: Optional'); ?><br>
     <?php echo $form->text('website'); ?></p>
 
-    <p><?php echo $form->label('password', 'Password: Required, Alpha-numeric, Within range'); ?><br />
+    <p><?php echo $form->label('password', 'Password: Required, Alpha-numeric, Within range'); ?><br>
     <?php echo $form->password('password'); ?></p>
 
-    <p><?php echo $form->label('decimal', 'Decimal: Optional, 2 points'); ?><br />
+    <p><?php echo $form->label('decimal', 'Decimal: Optional, 2 points'); ?><br>
     <?php echo $form->text('decimal'); ?></p>
 
-    <p><?php echo $form->label('date', 'Date: Required, mm/dd/yyyy'); ?><br />
+    <p><?php echo $form->label('date', 'Date: Required, mm/dd/yyyy'); ?><br>
     <?php echo $form->text('date'); ?></p>
 
-    <p><?php echo $form->label('file', 'File: Required'); ?><br />
-    <?php echo $form->file('file'); ?></p>
+    <p><?php echo $form->label('file1', 'File 1: Required, filesize 5MB'); ?><br>
+    <?php echo $form->file('file1'); ?></p>
 
-    <p><?php echo $form->label('select', 'Select:'); ?><br />
+    <p><?php echo $form->label('file2', 'File 2: Optional'); ?><br>
+    <?php echo $form->file('file2'); ?></p>
+
+    <p><?php echo $form->label('select', 'Select:'); ?><br>
     <?php echo $form->select('select', $options, array('default' => 'blue')); ?></p>
 
-    <p><?php echo $form->label('checkbox1', 'Checkbox: Single, Required'); ?><br />
+    <p><?php echo $form->label('checkbox1', 'Checkbox: Single, Required'); ?><br>
     <?php echo $form->checkbox('checkbox1', array('value' => 1)); ?></p>
 
     <p>
-        <?php echo $form->label('checkbox2', 'Checkbox: Multiple'); ?><br />
+        <?php echo $form->label('checkbox2', 'Checkbox: Multiple'); ?><br>
         <?php foreach ($options as $key => $value) {
             echo $form->checkbox('checkbox2', array('value' => $key, 'multiple' => true)) .' '. $value;
         } ?>
     </p>
 
     <p>
-        <?php echo $form->label('radio', 'Radio:'); ?><br />
+        <?php echo $form->label('radio', 'Radio:'); ?><br>
         <?php foreach ($options as $key => $value) {
             echo $form->radio('radio', array('value' => $key, 'default' => 'black')) .' '. $value;
         } ?>
