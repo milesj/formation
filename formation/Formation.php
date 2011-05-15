@@ -29,7 +29,7 @@ class Form {
 	 * @access protected
 	 * @var array
 	 */
-	protected $_cleaned;
+	protected $_cleaned = array();
 
 	/**
 	 * Configuration settings.
@@ -49,7 +49,7 @@ class Form {
 	 * @access protected
 	 * @var array
 	 */
-	protected $_errors;
+	protected $_errors = array();
 
 	/**
 	 * Array of $_POST or $_GET, merged with $_FILES.
@@ -57,7 +57,7 @@ class Form {
 	 * @access protected
 	 * @var array
 	 */
-	protected $_data;
+	protected $_data = array();
 
 	/**
 	 * All tags for form creation.
@@ -859,7 +859,17 @@ class Form {
 	 * @return mixed
 	 */
 	protected function _validate($input, $cleaners, $required = true) {
-		if (($required === true) || ($required === false && !empty($this->_data[$input]))) {
+		$validate = ($required === true);
+
+		if (isset($this->_data[$input]) && is_array($this->_data[$input])) {
+			if ($required === false && isset($this->_data[$input]['tmp_name']) && !empty($this->_data[$input]['tmp_name'])) {
+				$validate = true;
+			}
+		} else if ($required === false && !empty($this->_data[$input])) {
+			$validate = true;
+		}
+
+		if ($validate) {
 			foreach ($cleaners as $method => $args) {
 				if (!is_array($args) && !empty($args)) {
 					$args = array($args);
@@ -1096,11 +1106,12 @@ class Formation {
 	 * @static
 	 */
 	public static function isExt($input, $extensions = array()) {
-		if (!is_array($extensions)) {
+		if (empty($extensions) || !is_array($extensions)) {
 			$extensions = array('gif', 'jpeg', 'png', 'jpg');
 		}
-
-		$ext = mb_strtolower(trim(mb_strrchr($input, '.'), '.'));
+		
+		$field = is_array($input) ? $input['name'] : $input;
+		$ext = mb_strtolower(trim(mb_strrchr($field, '.'), '.'));
 
 		return in_array($ext, $extensions, true) ? $input : false;
 	}
