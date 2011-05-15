@@ -92,7 +92,7 @@ class Form {
 	public function __construct($model = 'Form', $xhtml = false) {
 		$this->flush();
 
-		if (empty($model)) {
+		if (empty($model) || is_numeric($model)) {
 			$model = 'Form';
 		}
 
@@ -451,7 +451,7 @@ class Form {
 		}
 
 		$this->_data = isset($post[$model]) ? $post[$model] : array();
-
+		
 		return ((!empty($submit) && isset($this->_data[$submit])) || (empty($submit) && !empty($this->_data)));
 	}
 
@@ -506,7 +506,7 @@ class Form {
 			'type' => 'select'
 		), $attributes);
 
-		if (!empty($attributes['value'])) {
+		if ($attributes['value'] !== '') {
 			$selected = $attributes['value'];
 		}
 
@@ -596,13 +596,13 @@ class Form {
 	 *
 	 * @access public
 	 * @param string $type		- The type of form element to check against
-	 * @param string $input		- The input value to check against
+	 * @param string $field		- The input value to check against
 	 * @param string $value		- The value your are submitting
 	 * @param string $default	- Default value to display
 	 * @return string
 	 */
-	public function value($type, $input, $value = '', $default = '') {
-		$input = isset($this->_data[$input]) ? $this->_data[$input] : null;
+	public function value($type, $field, $value = '', $default = '') {
+		$input = isset($this->_data[$field]) ? $this->_data[$field] : null;
 		$output = '';
 
 		switch ($type) {
@@ -612,27 +612,28 @@ class Form {
 			case 'password':
 			case 'hidden':
 			case 'file':
-				if (!empty($input)) {
+				if ($input !== null) {
 					$output = self::cleanse($input);
 				} else {
 					$output = isset($default) ? $default : '';
 				}
 			break;
 			case 'radio':
-				if (!empty($input)) {
+				if ($input !== null) {
 					$output = ($input == $value);
 				} else {
 					$output = ($value == $default || $default === true);
 				}
 			break;
 			case 'select':
-				$output = !empty($input) ? $input : $default;
+				$output = ($input !== null) ? $input : $default;
 			break;
 			case 'checkbox':
 				$output = false;
 
 				if (is_array($input)) {
-					$output = in_array($value, $input);
+					$flipped = array_flip($input);
+					$output = isset($flipped[$value]);
 				} else {
 					if ($input == $value) {
 						$output = true;
@@ -750,7 +751,7 @@ class Form {
 		$default = isset($attributes['default']) ? $attributes['default'] : null;
 		$value = isset($attributes['value']) ? $attributes['value'] : '';
 
-		if (($params['type'] == 'checkbox' || $params['type'] == 'radio') && !$value) {
+		if (($params['type'] == 'checkbox' || $params['type'] == 'radio') && $value === '') {
 			trigger_error(sprintf('%s(): When using the checkbox or radio input type, the value option is required.', __METHOD__), E_USER_WARNING);
 		}
 
@@ -758,7 +759,7 @@ class Form {
 
 		if ($result === true) {
 			$attributes['checked'] = 'checked';
-		} else if (!empty($result)) {
+		} else if ($params['type'] != 'radio' && $params['type'] != 'checkbox') {
 			$attributes['value'] = $result;
 		} else {
 			$attributes['value'] = $value;
@@ -843,7 +844,7 @@ class Form {
 	 */
 	protected function _tag($tag) {
 		if (is_array($this->_tags[$tag])) {
-			return ($this->_config['xhtml']) ? $this->_tags[$tag][0] : $this->_tags[$tag][1];
+			return ($this->_config['xhtml']) ? $this->_tags[$tag][1] : $this->_tags[$tag][0];
 		}
 
 		return $this->_tags[$tag];
@@ -901,7 +902,7 @@ class Formation {
 	public static function checkLength($input, $max = 2500, $min = 1) {
 		$length = mb_strlen($input);
 
-		return ($length <= $max || $length >= $min) ? $input : false;
+		return ($length <= $max && $length >= $min);
 	}
 
 	/**
@@ -916,10 +917,10 @@ class Formation {
 	 */
 	public static function checkMatch($input, $match, $strict = false) {
 		if ($strict) {
-			return ($input === $match) ? $input : false;
+			return ($input === $match);
 		}
 
-		return ($input == $match) ? $input : false;
+		return ($input == $match);
 	}
 
 	/**
@@ -936,7 +937,7 @@ class Formation {
 			return false;
 		}
 
-		return preg_match($expression, $input) ? $input : false;
+		return preg_match($expression, $input);
 	}
 
 	/**
@@ -968,7 +969,7 @@ class Formation {
 				case 'minHeight':   $result = ($height >= $size); break;
 			}
 
-			return ($result) ? $input : false;
+			return ($result);
 		}
 
 		return false;
@@ -978,11 +979,15 @@ class Formation {
 	 * Escapes characters that would break the regex.
 	 *
 	 * @access public
-	 * @param array $characters
+	 * @param array|string $characters
 	 * @return string
 	 */
 	public static function escape($characters) {
-		return preg_quote(implode('', $characters), '/');
+		if (is_array($characters)) {
+			$characters = implode('', $characters);
+		}
+		
+		return preg_quote($characters, '/');
 	}
 
 	/**
@@ -996,7 +1001,7 @@ class Formation {
 	public static function isAllChars($input) {
 		$exceptions = self::escape(array('!','@','#','$','%','^','&','*','(',')','-','_','=','+','~','`','[',']','{','}','\\','|',';',':','"',"'",'?','/','.','>','<',','));
 
-		return preg_match('/^[a-zA-Z0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+		return preg_match('/^[\s0-9a-zA-Z'. $exceptions .']+$/is', $input);
 	}
 
 	/**
@@ -1009,11 +1014,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isAlnum($input, $exceptions = array()) {
-		if (is_array($exceptions)) {
-			$exceptions = self::escape($exceptions);
-		}
-
-		return preg_match('/^[a-zA-Z0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+		return preg_match('/^[a-zA-Z0-9\s'. self::escape($exceptions) .']+$/', $input);
 	}
 
 	/**
@@ -1026,11 +1027,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isAlpha($input, $exceptions = array()) {
-		if (is_array($exceptions)) {
-			$exceptions = self::escape($exceptions);
-		}
-
-		return preg_match('/^[a-zA-Z\s'. $exceptions .']+$/', $input) ? $input : false;
+		return preg_match('/^[a-zA-Z\s'. self::escape($exceptions) .']+$/', $input);
 	}
 
 	/**
@@ -1042,7 +1039,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isBoolean($input) {
-		return in_array($input, array(0, 1, '0', '1', true, false), true) ? $input : false;
+		return in_array($input, array(1, 0, '1', '0', true, false), true);
 	}
 
 	/**
@@ -1054,9 +1051,13 @@ class Formation {
 	 * @static
 	 */
 	public static function isDate($input) {
-		list($m, $d, $y) = explode('/', $input);
+		if (($timestamp = strtotime($input)) === false) {
+			return false;
+		}
 
-		return (preg_match('/^(?:0?[1-9]|1[0-2])\/(?:0?[1-9]|[1-2]\d|3[0-1])\/(?:\d{2,4})$/', $input) || checkdate($m, $d, $y)) ? $input : false;
+		list($m, $d, $y) = explode('/', date('m/d/Y', $timestamp));
+
+		return (preg_match('/^(?:0?[1-9]|1[0-2])\/(?:0?[1-9]|[1-2]\d|3[0-1])\/(?:\d{2,4})$/', $input) || checkdate($m, $d, $y));
 	}
 
 	/**
@@ -1069,7 +1070,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isDecimal($input, $decimals = 2) {
-		return preg_match('/^[-]*[0-9][0-9]*\.[0-9]{'. intval($decimals) .'}$/', $input) ? $input : false;
+		return preg_match('/^[-]*[0-9][0-9]*\.[0-9]{'. intval($decimals) .'}$/', $input);
 	}
 
 	/**
@@ -1081,7 +1082,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isEmail($input) {
-		return preg_match('/^[\+0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input)) ? $input : false;
+		return preg_match('/^[\+0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input));
 	}
 
 	/**
@@ -1093,7 +1094,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isFile($input) {
-		return (is_array($input) && !empty($input['tmp_name']) && $input['error'] == 0) ? $input : false;
+		return (is_array($input) && !empty($input['tmp_name']) && $input['error'] == 0);
 	}
 
 	/**
@@ -1112,8 +1113,8 @@ class Formation {
 		
 		$field = is_array($input) ? $input['name'] : $input;
 		$ext = mb_strtolower(trim(mb_strrchr($field, '.'), '.'));
-
-		return in_array($ext, $extensions, true) ? $input : false;
+		
+		return in_array($ext, $extensions, true);
 	}
 
 	/**
@@ -1125,7 +1126,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isIp($input) {
-		return preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $input) ? $input : false;
+		return preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $input);
 	}
 
 	/**
@@ -1138,11 +1139,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isNumeric($input, $exceptions = array()) {
-		if (is_array($exceptions)) {
-			$exceptions = self::escape($exceptions);
-		}
-
-		return preg_match('/^[0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+		return preg_match('/^[0-9\s'. self::escape($exceptions) .']+$/', $input);
 	}
 
 	/**
@@ -1154,7 +1151,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isPhone($input) {
-		return preg_match('/^\([0-9]{3}\)\s[0-9]{3}[-]?[0-9]{4}$/', $input) ? $input : false;
+		return preg_match('/^\([0-9]{3}\)\s[0-9]{3}[-]?[0-9]{4}$/', $input);
 	}
 
 	/**
@@ -1166,7 +1163,11 @@ class Formation {
 	 * @static
 	 */
 	public static function isTime($input) {
-		return preg_match('/^(?:0?[1-9]|1[0-2]):(?:[0-5][0-9])(?::[0-5][0-9])? [PA]\.?M\.?$/', mb_strtoupper($input)) ? $input : false;
+		if (($timestamp = strtotime($input)) === false) {
+			return false;
+		}
+
+		return preg_match('/^(?:0?[0-9]|1[0-2]):(?:[0-5][0-9])(?::[0-5][0-9])? (PM|AM)$/', date('h:i:s A', $timestamp));
 	}
 
 	/**
@@ -1178,7 +1179,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isWebsite($input) {
-		return preg_match('/^(?:(?:http|ftp)s?):\/\/(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,4}(?:[-a-zA-Z0-9._\/&=+%?]+)?$/', mb_strtolower($input)) ? $input : false;
+		return preg_match('/^(?:(?:http|ftp)s?):\/\/(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,4}(?:[-a-zA-Z0-9._\/&=+%?]+)?$/', mb_strtolower($input));
 	}
 
 	/**
@@ -1195,7 +1196,7 @@ class Formation {
 			return false;
 		}
 
-		return in_array($input, $list, true) ? $input : false;
+		return in_array($input, $list, true);
 	}
 
 	/**
@@ -1208,8 +1209,8 @@ class Formation {
 	 * @return mixed
 	 * @static
 	 */
-	public static function inRange($input, $max, $min) {
-		return ($input <= $max || $input >= $min) ? $input : false;
+	public static function inRange($input, $max, $min = 1) {
+		return ($input <= $max && $input >= $min);
 	}
 
 	/**
@@ -1227,7 +1228,7 @@ class Formation {
 		}
 
 		if (self::isFile($input)) {
-			return ($input['size'] > $size) ? $input : false;
+			return ($input['size'] > $size);
 		}
 
 		return false;
@@ -1274,7 +1275,7 @@ class Formation {
 		}
 
 		if (self::isFile($input)) {
-			return ($input['size'] <= $size) ? $input : false;
+			return ($input['size'] <= $size);
 		}
 
 		return false;
@@ -1315,7 +1316,7 @@ class Formation {
 	 * @static
 	 */
 	public static function notEmpty($input) {
-		return (!empty($input) && isset($input)) ? $input : false;
+		return ((string)$input != '');
 	}
 
 }
