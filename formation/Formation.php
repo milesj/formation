@@ -16,27 +16,27 @@
 class Form { 
 
 	/**
-	* Current version.
-	*
-	* @access public
-	* @var string
-	*/
+	 * Current version.
+	 *
+	 * @access public
+	 * @var string
+	 */
 	public $version = '3.1';
 
 	/**
-	* Array of cleaned values.
-	*
-	* @access protected
-	* @var array
-	*/
+	 * Array of cleaned values.
+	 *
+	 * @access protected
+	 * @var array
+	 */
 	protected $_cleaned;
 
 	/**
-	* Configuration settings.
-	*
-	* @access protected
-	* @var string
-	*/
+	 * Configuration settings.
+	 *
+	 * @access protected
+	 * @var string
+	 */
 	protected $_config = array(
 		'xhtml' => false,
 		'legend' => false,
@@ -44,27 +44,27 @@ class Form {
 	);
 
 	/**
-	* Array of errored form fields.
-	*
-	* @access protected
-	* @var array
-	*/
+	 * Array of errored form fields.
+	 *
+	 * @access protected
+	 * @var array
+	 */
 	protected $_errors;
 
 	/**
-	* Array of $_POST or $_GET, merged with $_FILES.
-	*
-	* @access protected
-	* @var array
-	*/
+	 * Array of $_POST or $_GET, merged with $_FILES.
+	 *
+	 * @access protected
+	 * @var array
+	 */
 	protected $_data;
 
 	/**
-	* All tags for form creation.
-	*
-	* @access protected
-	* @var array
-	*/
+	 * All tags for form creation.
+	 *
+	 * @access protected
+	 * @var array
+	 */
 	protected $_tags = array(
 		'form_open'         => '<form%s>',
 		'form_close'        => '</form>',
@@ -82,13 +82,13 @@ class Form {
 	);
 
 	/**
-	* Initialize the class.
-	*
-	* @access public
-	* @param string $model
-	* @param boolean $xhtml
-	* @return void
-	*/
+	 * Initialize the class.
+	 *
+	 * @access public
+	 * @param string $model
+	 * @param boolean $xhtml
+	 * @return void
+	 */
 	public function __construct($model = 'Form', $xhtml = false) {
 		$this->flush();
 
@@ -101,13 +101,13 @@ class Form {
 	}
 
 	/**
-	* Form button.
-	*
-	* @access public
-	* @param string $text
-	* @param array $attributes
-	* @return string
-	*/
+	 * Form button.
+	 *
+	 * @access public
+	 * @param string $text
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function button($text, array $attributes = array()) {
 		$attributes = array('type' => 'button') + $attributes;
 
@@ -115,14 +115,14 @@ class Form {
 	}
 
 	/**
-	* Filters and cleans each input and applies it to the cleaned array.
-	*
-	* @access public
-	* @param array $inputs
-	* @param boolean $escapeQuotes
-	* @param boolean $removeHtml
-	* @return array
-	*/
+	 * Filters and cleans each input and applies it to the cleaned array.
+	 *
+	 * @access public
+	 * @param array $inputs
+	 * @param boolean $escapeQuotes
+	 * @param boolean $removeHtml
+	 * @return array
+	 */
 	public function clean(array $inputs = array(), $escapeQuotes = true, $removeHtml = false) {
 		if (empty($inputs)) {
 			$inputs = $this->_data;
@@ -144,15 +144,15 @@ class Form {
 	}
 
 	/**
-	* Escapes unwanted characters and tags; options for escaping quotes.
-	*
-	* @access public
-	* @param string $toClean
-	* @param boolean $escapeQuotes
-	* @param boolean $removeHtml
-	* @return string
-	* @static
-	*/
+	 * Escapes unwanted characters and tags; options for escaping quotes.
+	 *
+	 * @access public
+	 * @param string $toClean
+	 * @param boolean $escapeQuotes
+	 * @param boolean $removeHtml
+	 * @return string
+	 * @static
+	 */
 	public static function cleanse($toClean, $escapeQuotes = true, $removeHtml = false) {
 		if (is_array($toClean)) {
 			foreach ($toClean as $key => $value) {
@@ -174,11 +174,11 @@ class Form {
 	}
 
 	/**
-	* Close the form.
-	*
-	* @access public
-	* @return string
-	*/
+	 * Close the form.
+	 *
+	 * @access public
+	 * @return string
+	 */
 	public function close() {
 		$output = $this->_tag('form_close');
 
@@ -190,13 +190,13 @@ class Form {
 	}
 
 	/**
-	* Checkbox input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * Checkbox input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function checkbox($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -207,12 +207,12 @@ class Form {
 	}
 
 	/**
-	* Create the form and the opening tag.
-	*
-	* @access public
-	* @param array $attributes
-	* @return string
-	*/
+	 * Create the form and the opening tag.
+	 *
+	 * @access public
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function create(array $attributes = array()) {
 		$attributes = $attributes + array(
 			'id' => $this->model() .'Form',
@@ -248,25 +248,25 @@ class Form {
 	}
 
 	/**
-	* Add to the error list.
-	*
-	* @access public
-	* @param string $input
-	* @param string $message
-	* @return boolean
-	*/
+	 * Add to the error list.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param string $message
+	 * @return boolean
+	 */
 	public function error($input, $message) {
 		$this->_errors[$input] = $message;
 	}
 
 	/**
-	* File input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * File input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function file($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -279,11 +279,11 @@ class Form {
 	}
 
 	/**
-	* Resets all values.
-	*
-	* @access public
-	* @return void
-	*/
+	 * Resets all values.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function flush() {
 		$this->_data = array();
 		$this->_errors = array();
@@ -291,12 +291,12 @@ class Form {
 	}
 
 	/**
-	* Returns a value from the post.
-	*
-	* @access public
-	* @param string $key
-	* @return mixed
-	*/
+	 * Returns a value from the post.
+	 *
+	 * @access public
+	 * @param string $key
+	 * @return mixed
+	 */
 	public function get($key = null) {
 		if (isset($this->_data[$key])) {
 			return $this->_data[$key];
@@ -309,45 +309,45 @@ class Form {
 	}
 
 	/**
-	* Returns all the error messages.
-	*
-	* @access public
-	* @return array
-	*/
+	 * Returns all the error messages.
+	 *
+	 * @access public
+	 * @return array
+	 */
 	public function getErrors() {
 		return $this->_errors;
 	}
 
 	/**
-	* If an input doesnt validate, apply a class to the input.
-	*
-	* @access public
-	* @param string $input - Check to see if this input failed
-	* @param string $class - The error class to return
-	* @return string
-	*/
+	 * If an input doesnt validate, apply a class to the input.
+	 *
+	 * @access public
+	 * @param string $input - Check to see if this input failed
+	 * @param string $class - The error class to return
+	 * @return string
+	 */
 	public function getClass($input, $class = 'input-error') {
 		return (!empty($this->_errors) && isset($this->_errors[$input])) ? $class : '';
 	}
 
 	/**
-	* Return the array of all cleaned elements.
-	*
-	* @access public
-	* @return string
-	*/
+	 * Return the array of all cleaned elements.
+	 *
+	 * @access public
+	 * @return string
+	 */
 	public function getCleaned() {
 		return $this->_cleaned;
 	}
 
 	/**
-	* Hidden input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * Hidden input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function hidden($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -358,44 +358,44 @@ class Form {
 	}
 
 	/**
-	* Inflect a name to use for the form element IDs.
-	*
-	* @access public
-	* @param string $value
-	* @return string
-	*/
+	 * Inflect a name to use for the form element IDs.
+	 *
+	 * @access public
+	 * @param string $value
+	 * @return string
+	 */
 	public function inflect($value) {
 		return ucfirst(preg_replace('/[^-_a-zA-Z0-9]/i', '', $value));
 	}
 
 	/**
-	* Image input field.
-	*
-	* @access public
-	* @param string $title
-	* @param array $attributes
-	* @return string
-	*/
+	 * Image input field.
+	 *
+	 * @access public
+	 * @param string $title
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function image($title, array $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' 	=> $this->model() .'ImageButton',
-			'alt'   => $title,
-			'type' 	=> 'image',
-			'src'   => ''
+			'id' => $this->model() .'ImageButton',
+			'alt' => $title,
+			'type' => 'image',
+			'src' => ''
 		);
 
 		return sprintf($this->_tag('input'), $this->_attributes($attributes));
 	}
 
 	/**
-	* Form input label.
-	*
-	* @access public
-	* @param string $name
-	* @param string $title
-	* @param string $attributes
-	* @return string
-	*/
+	 * Form input label.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param string $title
+	 * @param string $attributes
+	 * @return string
+	 */
 	public function label($name, $title, array $attributes = array()) {
 		$attributes = $attributes + array(
 			'for' => $this->model() . $this->inflect($name)
@@ -405,23 +405,23 @@ class Form {
 	}
 
 	/**
-	* Return the model name.
-	*
-	* @access public
-	* @return string
-	*/
+	 * Return the model name.
+	 *
+	 * @access public
+	 * @return string
+	 */
 	public function model() {
 		return $this->_config['model'];
 	}
 
 	/**
-	* Password input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * Password input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function password($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -432,13 +432,13 @@ class Form {
 	}
 
 	/**
-	* Checks to see if the post is submitted; also saves the post property.
-	*
-	* @access public
-	* @param array $post 		- The $_POST or $_GET
-	* @param string $submit 	- Name of the submit button (optional)
-	* @return boolean
-	*/
+	 * Checks to see if the post is submitted; also saves the post property.
+	 *
+	 * @access public
+	 * @param array $post 		- The $_POST or $_GET
+	 * @param string $submit 	- Name of the submit button (optional)
+	 * @return boolean
+	 */
 	public function process(array $post = array(), $submit = null) {
 		$model = $this->model();
 
@@ -456,13 +456,13 @@ class Form {
 	}
 
 	/**
-	* Radio input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * Radio input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function radio($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -473,13 +473,13 @@ class Form {
 	}
 
 	/**
-	* Form reset button.
-	*
-	* @access public
-	* @param string $text
-	* @param array $attributes
-	* @return string
-	*/
+	 * Form reset button.
+	 *
+	 * @access public
+	 * @param string $text
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function reset($text = 'Reset', array $attributes = array()) {
 		$attributes = $attributes + array(
 			'id' => $this->model() .'ResetButton',
@@ -490,14 +490,14 @@ class Form {
 	}
 
 	/**
-	* Select field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $options
-	* @param array $attributes
-	* @return string
-	*/
+	 * Select field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $options
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function select($name, $options, array $attributes = array()) {
 		$selected = isset($attributes['default']) ? $attributes['default'] : null;
 
@@ -516,13 +516,13 @@ class Form {
 	}
 
 	/**
-	* Form submit button.
-	*
-	* @access public
-	* @param string $text
-	* @param array $attributes
-	* @return string
-	*/
+	 * Form submit button.
+	 *
+	 * @access public
+	 * @param string $text
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function submit($text = 'Submit', array $attributes = array()) {
 		$attributes = $attributes + array(
 			'id' => $this->model() .'SubmitButton',
@@ -533,13 +533,13 @@ class Form {
 	}
 
 	/**
-	* Text input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * Text input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function text($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -550,13 +550,13 @@ class Form {
 	}
 
 	/**
-	* Textarea input field.
-	*
-	* @access public
-	* @param string $name
-	* @param array $attributes
-	* @return string
-	*/
+	 * Textarea input field.
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function textarea($name, array $attributes = array()) {
 		$attributes = $this->_input(array(
 			'name' => $name,
@@ -572,12 +572,12 @@ class Form {
 	}
 
 	/**
-	* Checks to see if there are no errors and validates.
-	*
-	* @access public
-	* @param array $schema
-	* @return boolean
-	*/
+	 * Checks to see if there are no errors and validates.
+	 *
+	 * @access public
+	 * @param array $schema
+	 * @return boolean
+	 */
 	public function validates(array $schema = array()) {
 		if (!empty($schema)) {
 			foreach ($schema as $input => $validations) {
@@ -592,15 +592,15 @@ class Form {
 	}
 
 	/**
-	* If an input is set with a value keep it, or display default.
-	*
-	* @access public
-	* @param string $type		- The type of form element to check against
-	* @param string $input		- The input value to check against
-	* @param string $value		- The value your are submitting
-	* @param string $default	- Default value to display
-	* @return string
-	*/
+	 * If an input is set with a value keep it, or display default.
+	 *
+	 * @access public
+	 * @param string $type		- The type of form element to check against
+	 * @param string $input		- The input value to check against
+	 * @param string $value		- The value your are submitting
+	 * @param string $default	- Default value to display
+	 * @return string
+	 */
 	public function value($type, $input, $value = '', $default = '') {
 		$input = isset($this->_data[$input]) ? $this->_data[$input] : null;
 		$output = '';
@@ -647,12 +647,12 @@ class Form {
 	}
 
 	/**
-	* Format the attributes.
-	*
-	* @access protected
-	* @param array $attributes
-	* @return string
-	*/
+	 * Format the attributes.
+	 *
+	 * @access protected
+	 * @param array $attributes
+	 * @return string
+	 */
 	protected function _attributes(array $attributes) {
 		$clean = array();
 
@@ -670,14 +670,14 @@ class Form {
 	}
 
 	/**
-	* Executes the validation method.
-	*
-	* @access protected
-	* @param string $input
-	* @param string $method
-	* @param array $args
-	* @return mixed
-	*/
+	 * Executes the validation method.
+	 *
+	 * @access protected
+	 * @param string $input
+	 * @param string $method
+	 * @param array $args
+	 * @return mixed
+	 */
 	protected function _execute($input, $method, $args) {
 		$arguments = array();
 		$arguments[] = isset($this->_data[$input]) ? $this->_data[$input] : null;
@@ -707,11 +707,11 @@ class Form {
 	}
 
 	/**
-	* Reformat the $_FILES array.
-	*
-	* @access protected
-	* @return array
-	*/
+	 * Reformat the $_FILES array.
+	 *
+	 * @access protected
+	 * @return array
+	 */
 	protected function _files() {
 		$clean = array();
 
@@ -727,13 +727,13 @@ class Form {
 	}
 
 	/**
-	* Process and prepare all fields with default data.
-	*
-	* @access protected
-	* @param array $params
-	* @param array $attributes
-	* @return array
-	*/
+	 * Process and prepare all fields with default data.
+	 *
+	 * @access protected
+	 * @param array $params
+	 * @param array $attributes
+	 * @return array
+	 */
 	protected function _input($params, array $attributes = array()) {
 		$attributes = $attributes + $params;
 		$attributes['name'] = $this->model() .'['. $attributes['name'] .']';
@@ -802,13 +802,13 @@ class Form {
 	}
 
 	/**
-	* Form select options.
-	*
-	* @access protected
-	* @param string $options
-	* @param string $selected
-	* @return string
-	*/
+	 * Form select options.
+	 *
+	 * @access protected
+	 * @param string $options
+	 * @param string $selected
+	 * @return string
+	 */
 	protected function _options($options, $selected) {
 		$output = '';
 
@@ -835,12 +835,12 @@ class Form {
 	}
 
 	/**
-	* Determine the tag to use.
-	*
-	* @access protected
-	* @param string $tag
-	* @return string
-	*/
+	 * Determine the tag to use.
+	 *
+	 * @access protected
+	 * @param string $tag
+	 * @return string
+	 */
 	protected function _tag($tag) {
 		if (is_array($this->_tags[$tag])) {
 			return ($this->_config['xhtml']) ? $this->_tags[$tag][0] : $this->_tags[$tag][1];
@@ -850,14 +850,14 @@ class Form {
 	}
 
 	/**
-	* Builds the loop for the following input.
-	*
-	* @access protected
-	* @param string $input
-	* @param array $cleaners
-	* @param boolean $required - Is input required?
-	* @return mixed
-	*/
+	 * Builds the loop for the following input.
+	 *
+	 * @access protected
+	 * @param string $input
+	 * @param array $cleaners
+	 * @param boolean $required - Is input required?
+	 * @return mixed
+	 */
 	protected function _validate($input, $cleaners, $required = true) {
 		if (($required === true) || ($required === false && !empty($this->_data[$input]))) {
 			foreach ($cleaners as $method => $args) {
@@ -879,15 +879,15 @@ class Form {
 class Formation {
 
 	/**
-	* Checks the strings length of characters.
-	*
-	* @access public
-	* @param string $input
-	* @param int $max
-	* @param int $min
-	* @return mixed
-	* @static
-	*/
+	 * Checks the strings length of characters.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param int $max
+	 * @param int $min
+	 * @return mixed
+	 * @static
+	 */
 	public static function checkLength($input, $max = 2500, $min = 1) {
 		$length = mb_strlen($input);
 
@@ -895,15 +895,15 @@ class Formation {
 	}
 
 	/**
-	* Checks to see if two strings match.
-	*
-	* @access public
-	* @param string $input
-	* @param string $match
-	* @param boolean $strict
-	* @return mixed
-	* @static
-	*/
+	 * Checks to see if two strings match.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param string $match
+	 * @param boolean $strict
+	 * @return mixed
+	 * @static
+	 */
 	public static function checkMatch($input, $match, $strict = false) {
 		if ($strict) {
 			return ($input === $match) ? $input : false;
@@ -913,14 +913,14 @@ class Formation {
 	}
 
 	/**
-	* Matches a custom regex.
-	*
-	* @access public
-	* @param string $input
-	* @param string $expression
-	* @return mixed
-	* @static
-	*/
+	 * Matches a custom regex.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param string $expression
+	 * @return mixed
+	 * @static
+	 */
 	public static function custom($input, $expression = '') {
 		if (empty($expression)) {
 			return false;
@@ -930,26 +930,334 @@ class Formation {
 	}
 
 	/**
-	* Escapes characters that would break the regex.
-	*
-	* @access public
-	* @param array $characters
-	* @return string
-	*/
+	 * Validate an images dimensions.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param string $type
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function dimensions($input, $type, $size) {
+		if (self::isFile($input)) {
+			$file = getimagesize($input['tmp_name']);
+
+			if (!$file) {
+				return false;
+			}
+
+			$width = $file[0];
+			$height = $file[1];
+			$size = (int) $size;
+
+			switch ($type) {
+				case 'maxWidth':    $result = ($width <= $size); break;
+				case 'maxHeight':   $result = ($height <= $size); break;
+				case 'minWidth':    $result = ($width >= $size); break;
+				case 'minHeight':   $result = ($height >= $size); break;
+			}
+
+			return ($result) ? $input : false;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Escapes characters that would break the regex.
+	 *
+	 * @access public
+	 * @param array $characters
+	 * @return string
+	 */
 	public static function escape($characters) {
 		return preg_quote(implode('', $characters), '/');
 	}
 
 	/**
-	* Validate an images filesize is below the max.
-	*
-	* @access public
-	* @param array $input
-	* @param int $size
-	* @return mixed
-	* @static
-	*/
-	public static function filesize($input, $size = 5242880) {
+	 * Checks to see if a value is of numerical, alphabetical and punctuational value.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isAllChars($input) {
+		$exceptions = self::escape(array('!','@','#','$','%','^','&','*','(',')','-','_','=','+','~','`','[',']','{','}','\\','|',';',':','"',"'",'?','/','.','>','<',','));
+
+		return preg_match('/^[a-zA-Z0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a required field is of numerical and alphabetical value.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param array $exceptions
+	 * @return mixed
+	 * @static
+	 */
+	public static function isAlnum($input, $exceptions = array()) {
+		if (is_array($exceptions)) {
+			$exceptions = self::escape($exceptions);
+		}
+
+		return preg_match('/^[a-zA-Z0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a required field is of alphabetical value.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param array $exceptions
+	 * @return mixed
+	 * @static
+	 */
+	public static function isAlpha($input, $exceptions = array()) {
+		if (is_array($exceptions)) {
+			$exceptions = self::escape($exceptions);
+		}
+
+		return preg_match('/^[a-zA-Z\s'. $exceptions .']+$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is boolean.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isBoolean($input) {
+		return in_array($input, array(0, 1, '0', '1', true, false), true) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is a valid date: mm/dd/yyyy.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isDate($input) {
+		list($m, $d, $y) = explode('/', $input);
+
+		return (preg_match('/^(?:0?[1-9]|1[0-2])\/(?:0?[1-9]|[1-2]\d|3[0-1])\/(?:\d{2,4})$/', $input) || checkdate($m, $d, $y)) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value has a decimal value.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param int $decimals
+	 * @return mixed
+	 * @static
+	 */
+	public static function isDecimal($input, $decimals = 2) {
+		return preg_match('/^[-]*[0-9][0-9]*\.[0-9]{'. intval($decimals) .'}$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is a valid email address.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isEmail($input) {
+		return preg_match('/^[\+0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input)) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a file input is not empty. Use in place of notEmpty() for files.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isFile($input) {
+		return (is_array($input) && !empty($input['tmp_name']) && $input['error'] == 0) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value has a correct extension.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param array $extensions
+	 * @return mixed
+	 * @static
+	 */
+	public static function isExt($input, $extensions = array()) {
+		if (!is_array($extensions)) {
+			$extensions = array('gif', 'jpeg', 'png', 'jpg');
+		}
+
+		$ext = mb_strtolower(trim(mb_strrchr($input, '.'), '.'));
+
+		return in_array($ext, $extensions, true) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is a valid ip address.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isIp($input) {
+		return preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a required field is of numerical value.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param array $exceptions
+	 * @return mixed
+	 * @static
+	 */
+	public static function isNumeric($input, $exceptions = array()) {
+		if (is_array($exceptions)) {
+			$exceptions = self::escape($exceptions);
+		}
+
+		return preg_match('/^[0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is a valid phone number: (xxx) xxx-xxxx.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isPhone($input) {
+		return preg_match('/^\([0-9]{3}\)\s[0-9]{3}[-]?[0-9]{4}$/', $input) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is a valid timestamp: hh:mm:ss am/pm.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isTime($input) {
+		return preg_match('/^(?:0?[1-9]|1[0-2]):(?:[0-5][0-9])(?::[0-5][0-9])? [PA]\.?M\.?$/', mb_strtoupper($input)) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a value is a valid website address: http://.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
+	public static function isWebsite($input) {
+		return preg_match('/^(?:(?:http|ftp)s?):\/\/(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,4}(?:[-a-zA-Z0-9._\/&=+%?]+)?$/', mb_strtolower($input)) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if an item is within an array/list.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param array $list
+	 * @return mixed
+	 * @static
+	 */
+	public static function inList($input, $list = array()) {
+		if (!is_array($list)) {
+			return false;
+		}
+
+		return in_array($input, $list, true) ? $input : false;
+	}
+
+	/**
+	 * Checks to see if a number is within a range.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @param int $max
+	 * @param int $min
+	 * @return mixed
+	 * @static
+	 */
+	public static function inRange($input, $max, $min) {
+		return ($input <= $max || $input >= $min) ? $input : false;
+	}
+
+	/**
+	 * Validate an images filesize is above the minimum.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function minFilesize($input, $size = 0) {
+		if (empty($size) || !is_numeric($size)) {
+			$size = 0;
+		}
+
+		if (self::isFile($input)) {
+			return ($input['size'] > $size) ? $input : false;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Validate an images height is above the minimum.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function minHeight($input, $size = 0) {
+		return self::dimensions($input, 'minHeight', $size);
+	}
+	
+	/**
+	 * Validate an images width is above the minimum.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function minWidth($input, $size = 0) {
+		return self::dimensions($input, 'minWidth', $size);
+	}
+
+	/**
+	 * Validate an images filesize is below the maximum.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function maxFilesize($input, $size = 5242880) {
 		if (empty($size) || !is_numeric($size)) {
 			$size = 5242880;
 		}
@@ -962,239 +1270,39 @@ class Formation {
 	}
 
 	/**
-	* Checks to see if a value is of numerical, alphabetical and punctuational value.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isAllChars($input) {
-		$exceptions = self::escape(array('!','@','#','$','%','^','&','*','(',')','-','_','=','+','~','`','[',']','{','}','\\','|',';',':','"',"'",'?','/','.','>','<',','));
-
-		return preg_match('/^[a-zA-Z0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+	 * Validate an images height is below the maximum.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function maxHeight($input, $size = 0) {
+		return self::dimensions($input, 'maxHeight', $size);
 	}
 
 	/**
-	* Checks to see if a required field is of numerical and alphabetical value.
-	*
-	* @access public
-	* @param string $input
-	* @param array $exceptions
-	* @return mixed
-	* @static
-	*/
-	public static function isAlnum($input, $exceptions = array()) {
-		if (is_array($exceptions)) {
-			$exceptions = self::escape($exceptions);
-		}
-
-		return preg_match('/^[a-zA-Z0-9\s'. $exceptions .']+$/', $input) ? $input : false;
+	 * Validate an images width is below the maximum.
+	 *
+	 * @access public
+	 * @param array $input
+	 * @param int $size
+	 * @return mixed
+	 * @static
+	 */
+	public static function maxWidth($input, $size = 0) {
+		return self::dimensions($input, 'maxWidth', $size);
 	}
 
 	/**
-	* Checks to see if a required field is of alphabetical value.
-	*
-	* @access public
-	* @param string $input
-	* @param array $exceptions
-	* @return mixed
-	* @static
-	*/
-	public static function isAlpha($input, $exceptions = array()) {
-		if (is_array($exceptions)) {
-			$exceptions = self::escape($exceptions);
-		}
-
-		return preg_match('/^[a-zA-Z\s'. $exceptions .']+$/', $input) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is boolean.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isBoolean($input) {
-		return in_array($input, array(0, 1, '0', '1', true, false), true) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is a valid date: mm/dd/yyyy.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isDate($input) {
-		list($m, $d, $y) = explode('/', $input);
-
-		return (preg_match('/^(?:0?[1-9]|1[0-2])\/(?:0?[1-9]|[1-2]\d|3[0-1])\/(?:\d{2,4})$/', $input) || checkdate($m, $d, $y)) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value has a decimal value.
-	*
-	* @access public
-	* @param string $input
-	* @param int $decimals
-	* @return mixed
-	* @static
-	*/
-	public static function isDecimal($input, $decimals = 2) {
-		return preg_match('/^[-]*[0-9][0-9]*\.[0-9]{'. intval($decimals) .'}$/', $input) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is a valid email address.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isEmail($input) {
-		return preg_match('/^[\+0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i', mb_strtolower($input)) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a file input is not empty. Use in place of notEmpty() for files.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isFile($input) {
-		return (is_array($input) && !empty($input['tmp_name']) && $input['error'] == 0) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value has a correct extension.
-	*
-	* @access public
-	* @param string $input
-	* @param array $extensions
-	* @return mixed
-	* @static
-	*/
-	public static function isExt($input, $extensions = array()) {
-		if (!is_array($extensions)) {
-			$extensions = array('gif', 'jpeg', 'png', 'jpg');
-		}
-
-		$ext = mb_strtolower(trim(mb_strrchr($input, '.'), '.'));
-
-		return in_array($ext, $extensions, true) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is a valid ip address.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isIp($input) {
-		return preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $input) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a required field is of numerical value.
-	*
-	* @access public
-	* @param string $input
-	* @param array $exceptions
-	* @return mixed
-	* @static
-	*/
-	public static function isNumeric($input, $exceptions = array()) {
-		if (is_array($exceptions)) {
-			$exceptions = self::escape($exceptions);
-		}
-
-		return preg_match('/^[0-9\s'. $exceptions .']+$/', $input) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is a valid phone number: (xxx) xxx-xxxx.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isPhone($input) {
-		return preg_match('/^\([0-9]{3}\)\s[0-9]{3}[-]?[0-9]{4}$/', $input) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is a valid timestamp: hh:mm:ss am/pm.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isTime($input) {
-		return preg_match('/^(?:0?[1-9]|1[0-2]):(?:[0-5][0-9])(?::[0-5][0-9])? [PA]\.?M\.?$/', mb_strtoupper($input)) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a value is a valid website address: http://.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
-	public static function isWebsite($input) {
-		return preg_match('/^(?:(?:http|ftp)s?):\/\/(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,4}(?:[-a-zA-Z0-9._\/&=+%?]+)?$/', mb_strtolower($input)) ? $input : false;
-	}
-
-	/**
-	* Checks to see if an item is within an array/list.
-	*
-	* @access public
-	* @param string $input
-	* @param array $list
-	* @return mixed
-	* @static
-	*/
-	public static function inList($input, $list = array()) {
-		if (!is_array($list)) {
-			return false;
-		}
-
-		return in_array($input, $list, true) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a number is within a range.
-	*
-	* @access public
-	* @param string $input
-	* @param int $max
-	* @param int $min
-	* @return mixed
-	* @static
-	*/
-	public static function inRange($input, $max, $min) {
-		return ($input <= $max || $input >= $min) ? $input : false;
-	}
-
-	/**
-	* Checks to see if a required field is empty.
-	*
-	* @access public
-	* @param string $input
-	* @return mixed
-	* @static
-	*/
+	 * Checks to see if a required field is empty.
+	 *
+	 * @access public
+	 * @param string $input
+	 * @return mixed
+	 * @static
+	 */
 	public static function notEmpty($input) {
 		return (!empty($input) && isset($input)) ? $input : false;
 	}
