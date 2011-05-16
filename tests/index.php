@@ -126,16 +126,16 @@ if ($form->process()) {
 	<p><?php echo $form->label('date', 'Date: Required, mm/dd/yyyy'); ?><br>
 	<?php echo $form->text('date'); ?></p>
 
-	<p><?php echo $form->label('file1', 'File 1: Required, filesize 5MB'); ?><br>
+	<p><?php echo $form->label('file1', 'File 1: Required, Filesize 5MB'); ?><br>
 	<?php echo $form->file('file1'); ?></p>
 
-	<p><?php echo $form->label('file2', 'File 2: Optional, max width 100px'); ?><br>
+	<p><?php echo $form->label('file2', 'File 2: Optional, Max width 100px'); ?><br>
 	<?php echo $form->file('file2'); ?></p>
 
 	<p><?php echo $form->label('select1', 'Select:'); ?><br>
 	<?php echo $form->select('select1', $options, array('default' => 'green')); ?></p>
 
-	<p><?php echo $form->label('select2', 'Select:'); ?><br>
+	<p><?php echo $form->label('select2', 'Select: Multiple'); ?><br>
 	<?php echo $form->select('select2', $options, array('default' => 'blue', 'multiple' => true)); ?></p>
 
 	<p><?php echo $form->label('checkbox1', 'Checkbox: Single, Required'); ?><br>

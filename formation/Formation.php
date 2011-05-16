@@ -447,11 +447,11 @@ class Form {
 		}
 
 		if (!empty($_FILES)) {
-			$post[$model] = $this->_files() + $post[$model];
+			$post = array_merge_recursive($post, $this->_files());
 		}
-
+		
 		$this->_data = isset($post[$model]) ? $post[$model] : array();
-
+		
 		return ((!empty($submit) && isset($this->_data[$submit])) || (empty($submit) && !empty($this->_data)));
 	}
 
@@ -717,9 +717,17 @@ class Form {
 		$clean = array();
 
 		foreach ($_FILES as $model => $data) {
+			if (!isset($clean[$model])) {
+				$clean[$model] = array();
+			}
+
 			foreach ($data as $key => $values) {
 				foreach ($values as $field => $value) {
-					$clean[$field][$key] = $value;
+					if (!isset($clean[$model][$field])) {
+						$clean[$model][$field] = array();
+					}
+					
+					$clean[$model][$field][$key] = $value;
 				}
 			}
 		}
