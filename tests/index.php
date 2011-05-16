@@ -132,8 +132,11 @@ if ($form->process()) {
 	<p><?php echo $form->label('file2', 'File 2: Optional, max width 100px'); ?><br>
 	<?php echo $form->file('file2'); ?></p>
 
-	<p><?php echo $form->label('select', 'Select:'); ?><br>
-	<?php echo $form->select('select', $options, array('default' => 'blue')); ?></p>
+	<p><?php echo $form->label('select1', 'Select:'); ?><br>
+	<?php echo $form->select('select1', $options, array('default' => 'green')); ?></p>
+
+	<p><?php echo $form->label('select2', 'Select:'); ?><br>
+	<?php echo $form->select('select2', $options, array('default' => 'blue', 'multiple' => true)); ?></p>
 
 	<p><?php echo $form->label('checkbox1', 'Checkbox: Single, Required'); ?><br>
 	<?php echo $form->checkbox('checkbox1', array('value' => 1)); ?></p>

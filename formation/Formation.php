@@ -451,7 +451,7 @@ class Form {
 		}
 
 		$this->_data = isset($post[$model]) ? $post[$model] : array();
-		
+
 		return ((!empty($submit) && isset($this->_data[$submit])) || (empty($submit) && !empty($this->_data)));
 	}
 
@@ -615,7 +615,7 @@ class Form {
 				if ($input !== null) {
 					$output = self::cleanse($input);
 				} else {
-					$output = isset($default) ? $default : '';
+					$output = ($default !== null) ? $default : '';
 				}
 			break;
 			case 'radio':
@@ -635,8 +635,8 @@ class Form {
 					$flipped = array_flip($input);
 					$output = isset($flipped[$value]);
 				} else {
-					if ($input == $value) {
-						$output = true;
+					if ($input !== null) {
+						$output = ($input == $value);
 					} else {
 						$output = ($value == $default || $default === true);
 					}
@@ -821,9 +821,14 @@ class Form {
 					$output .= $this->_tag('optgroup_close');
 
 				} else {
-					$attributes = array('value' => $value);
+					if (!is_array($selected)) {
+						$selected = array($selected);
+					}
 
-					if (($value == $selected) || (is_array($selected) && in_array($value, $selected))) {
+					$attributes = array('value' => $value);
+					$flipped = array_flip($selected);
+
+					if (isset($flipped[$value])) {
 						$attributes['selected'] = 'selected';
 					}
 
