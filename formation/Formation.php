@@ -21,7 +21,7 @@ class Form {
 	 * @access public
 	 * @var string
 	 */
-	public $version = '3.1';
+	public $version = '3.1.1';
 
 	/**
 	 * Array of cleaned values.
@@ -499,14 +499,15 @@ class Form {
 	 * @return string
 	 */
 	public function select($name, $options, array $attributes = array()) {
-		$selected = isset($attributes['default']) ? $attributes['default'] : null;
+		$keys = array_keys($options);
+		$selected = isset($attributes['default']) ? $attributes['default'] : $keys[0];
 
 		$attributes = $this->_input(array(
 			'name' => $name,
 			'type' => 'select'
 		), $attributes);
 
-		if ($attributes['value'] !== '') {
+		if ($attributes['value'] !== '' && $attributes['value'] !== null) {
 			$selected = $attributes['value'];
 		}
 
