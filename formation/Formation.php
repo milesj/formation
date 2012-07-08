@@ -6,14 +6,14 @@
  * Once validated, a cleaned data result is returned, or an array of errors are returned.
  * Furthermore, the system is split into 2 classes, Form which deals with building,
  * and Formation that contains static methods for validation.
- * 
+ *
  * @author      Miles Johnson - http://milesj.me
  * @copyright   Copyright 2006-2011, Miles Johnson, Inc.
  * @license     http://opensource.org/licenses/mit-license.php - Licensed under The MIT License
  * @link        http://milesj.me/code/php/formation
  */
- 
-class Form { 
+
+class Form {
 
 	/**
 	 * Current version.
@@ -87,7 +87,6 @@ class Form {
 	 * @access public
 	 * @param string $model
 	 * @param boolean $xhtml
-	 * @return void
 	 */
 	public function __construct($model = 'Form', $xhtml = false) {
 		$this->flush();
@@ -131,7 +130,7 @@ class Form {
 		if (is_array($inputs)) {
 			foreach ($inputs as $input => $value) {
 				if (isset($this->_data[$input])) {
-					if ($this->_data[$input] != '') {
+					if ($this->_data[$input] !== '') {
 						$this->_cleaned[$input] = self::cleanse($this->_data[$input], $escapeQuotes, $removeHtml);
 					} else {
 						$this->_cleaned[$input] = '';
@@ -215,15 +214,15 @@ class Form {
 	 */
 	public function create(array $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' => $this->model() .'Form',
+			'id' => $this->model() . 'Form',
 			'action' => '',
 			'method' => 'post'
 		);
 
 		if (isset($attributes['type'])) {
-			if ($attributes['type'] == 'file') {
+			if ($attributes['type'] === 'file') {
 				$attributes['enctype'] = 'multipart/form-data';
-			} else if ($attributes['type'] == 'app') {
+			} else if ($attributes['type'] === 'app') {
 				$attributes['enctype'] = 'application/x-www-form-urlencoded';
 			}
 		}
@@ -378,7 +377,7 @@ class Form {
 	 */
 	public function image($title, array $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' => $this->model() .'ImageButton',
+			'id' => $this->model() . 'ImageButton',
 			'alt' => $title,
 			'type' => 'image',
 			'src' => ''
@@ -393,7 +392,7 @@ class Form {
 	 * @access public
 	 * @param string $name
 	 * @param string $title
-	 * @param string $attributes
+	 * @param array $attributes
 	 * @return string
 	 */
 	public function label($name, $title, array $attributes = array()) {
@@ -449,9 +448,9 @@ class Form {
 		if (!empty($_FILES)) {
 			$post = array_merge_recursive($post, $this->_files());
 		}
-		
+
 		$this->_data = isset($post[$model]) ? $post[$model] : array();
-		
+
 		return ((!empty($submit) && isset($this->_data[$submit])) || (empty($submit) && !empty($this->_data)));
 	}
 
@@ -482,7 +481,7 @@ class Form {
 	 */
 	public function reset($text = 'Reset', array $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' => $this->model() .'ResetButton',
+			'id' => $this->model() . 'ResetButton',
 			'type' => 'reset'
 		);
 
@@ -526,7 +525,7 @@ class Form {
 	 */
 	public function submit($text = 'Submit', array $attributes = array()) {
 		$attributes = $attributes + array(
-			'id' => $this->model() .'SubmitButton',
+			'id' => $this->model() . 'SubmitButton',
 			'type' => 'submit'
 		);
 
@@ -600,7 +599,7 @@ class Form {
 	 * @param string $field		- The input value to check against
 	 * @param string $value		- The value your are submitting
 	 * @param string $default	- Default value to display
-	 * @return string
+	 * @return mixed
 	 */
 	public function value($type, $field, $value = '', $default = '') {
 		$input = isset($this->_data[$field]) ? $this->_data[$field] : null;
@@ -660,15 +659,15 @@ class Form {
 
 		if (!empty($attributes)) {
 			foreach ($attributes as $att => $value) {
-				if ($att != 'value') {
+				if ($att !== 'value') {
 					$value = self::cleanse($value, true, true);
 				}
 
-				$clean[] = $att .'="'. $value .'"';
+				$clean[] = $att . '="' . $value . '"';
 			}
 		}
 
-		return ' '. implode(' ', $clean);
+		return ' ' . implode(' ', $clean);
 	}
 
 	/**
@@ -679,6 +678,7 @@ class Form {
 	 * @param string $method
 	 * @param array $args
 	 * @return mixed
+	 * @throws Exception
 	 */
 	protected function _execute($input, $method, $args) {
 		$arguments = array();
@@ -699,7 +699,7 @@ class Form {
 			if (!empty($message)) {
 				$this->error($input, $message);
 			} else {
-				trigger_error(sprintf('%s(): The method "%s" to validate "%s" failed to execute.', __METHOD__, $method, $input), E_USER_WARNING);
+				throw new Exception(sprintf('The method "%s" to validation "%s" failed to execute.', $method, $input));
 			}
 
 			return false;
@@ -727,7 +727,7 @@ class Form {
 					if (!isset($clean[$model][$field])) {
 						$clean[$model][$field] = array();
 					}
-					
+
 					$clean[$model][$field][$key] = $value;
 				}
 			}
@@ -743,10 +743,11 @@ class Form {
 	 * @param array $params
 	 * @param array $attributes
 	 * @return array
+	 * @throws Exception
 	 */
 	protected function _input($params, array $attributes = array()) {
 		$attributes = $attributes + $params;
-		$attributes['name'] = $this->model() .'['. $attributes['name'] .']';
+		$attributes['name'] = $this->model() . '[' . $attributes['name'] . ']';
 
 		if (!isset($attributes['id'])) {
 			$attributes['id'] = $this->model() . $this->inflect($params['name']);
@@ -760,15 +761,15 @@ class Form {
 		$default = isset($attributes['default']) ? $attributes['default'] : null;
 		$value = isset($attributes['value']) ? $attributes['value'] : '';
 
-		if (($params['type'] == 'checkbox' || $params['type'] == 'radio') && $value === '') {
-			trigger_error(sprintf('%s(): When using the checkbox or radio input type, the value option is required.', __METHOD__), E_USER_WARNING);
+		if (($params['type'] === 'checkbox' || $params['type'] === 'radio') && $value === '') {
+			throw new Exception('When using the checkbox or radio input type, the value option is required.');
 		}
 
 		$result = $this->value($params['type'], $params['name'], $value, $default);
 
 		if ($result === true) {
 			$attributes['checked'] = 'checked';
-		} else if ($params['type'] != 'radio' && $params['type'] != 'checkbox') {
+		} else if ($params['type'] !== 'radio' && $params['type'] !== 'checkbox') {
 			$attributes['value'] = $result;
 		} else {
 			$attributes['value'] = $value;
@@ -780,13 +781,13 @@ class Form {
 				if (($attributes[$attr] === true) || ($attributes[$attr] == $attr)) {
 					$attributes[$attr] = $attr;
 
-					if ($attr == 'multiple') {
-						if ($params['type'] == 'checkbox') {
+					if ($attr === 'multiple') {
+						if ($params['type'] === 'checkbox') {
 							$attributes['name'] .= '[]';
 							$attributes['id'] .= $this->inflect($attributes['value']);
 							unset($attributes['multiple']);
 
-						} else if ($params['type'] == 'select') {
+						} else if ($params['type'] === 'select') {
 							$attributes['name'] .= '[]';
 						}
 					}
@@ -799,7 +800,7 @@ class Form {
 		// Apply error and classes
 		if ($class = $this->getClass($params['name'])) {
 			if (isset($attributes['class'])) {
-				$attributes['class'] = $class .' '. $attributes['class'];
+				$attributes['class'] = $class . ' ' . $attributes['class'];
 			} else {
 				$attributes['class'] = $class;
 			}
@@ -815,7 +816,7 @@ class Form {
 	 * Form select options.
 	 *
 	 * @access protected
-	 * @param string $options
+	 * @param array $options
 	 * @param string $selected
 	 * @return string
 	 */
@@ -898,7 +899,7 @@ class Form {
 
 		return true;
 	}
-	
+
 }
 
 class Formation {
@@ -975,6 +976,7 @@ class Formation {
 			$width = $file[0];
 			$height = $file[1];
 			$size = (int) $size;
+			$result = false;
 
 			switch ($type) {
 				case 'maxWidth':    $result = ($width <= $size); break;
@@ -983,7 +985,7 @@ class Formation {
 				case 'minHeight':   $result = ($height >= $size); break;
 			}
 
-			return ($result);
+			return $result;
 		}
 
 		return false;
@@ -1000,7 +1002,7 @@ class Formation {
 		if (is_array($characters)) {
 			$characters = implode('', $characters);
 		}
-		
+
 		return preg_quote($characters, '/');
 	}
 
@@ -1015,7 +1017,7 @@ class Formation {
 	public static function isAllChars($input) {
 		$exceptions = self::escape(array('!','@','#','$','%','^','&','*','(',')','-','_','=','+','~','`','[',']','{','}','\\','|',';',':','"',"'",'?','/','.','>','<',','));
 
-		return preg_match('/^[\s0-9a-zA-Z'. $exceptions .']+$/is', $input);
+		return preg_match('/^[\s0-9a-zA-Z' . $exceptions . ']+$/is', $input);
 	}
 
 	/**
@@ -1028,7 +1030,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isAlnum($input, $exceptions = array()) {
-		return preg_match('/^[a-zA-Z0-9\s'. self::escape($exceptions) .']+$/', $input);
+		return preg_match('/^[a-zA-Z0-9\s' . self::escape($exceptions) . ']+$/', $input);
 	}
 
 	/**
@@ -1041,7 +1043,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isAlpha($input, $exceptions = array()) {
-		return preg_match('/^[a-zA-Z\s'. self::escape($exceptions) .']+$/', $input);
+		return preg_match('/^[a-zA-Z\s' . self::escape($exceptions) . ']+$/', $input);
 	}
 
 	/**
@@ -1084,7 +1086,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isDecimal($input, $decimals = 2) {
-		return preg_match('/^[-]*[0-9][0-9]*\.[0-9]{'. intval($decimals) .'}$/', $input);
+		return preg_match('/^[-]*[0-9][0-9]*\.[0-9]{' . intval($decimals) . '}$/', $input);
 	}
 
 	/**
@@ -1124,10 +1126,10 @@ class Formation {
 		if (empty($extensions) || !is_array($extensions)) {
 			$extensions = array('gif', 'jpeg', 'png', 'jpg');
 		}
-		
+
 		$field = is_array($input) ? $input['name'] : $input;
 		$ext = mb_strtolower(trim(mb_strrchr($field, '.'), '.'));
-		
+
 		return in_array($ext, $extensions, true);
 	}
 
@@ -1153,7 +1155,7 @@ class Formation {
 	 * @static
 	 */
 	public static function isNumeric($input, $exceptions = array()) {
-		return preg_match('/^[0-9\s'. self::escape($exceptions) .']+$/', $input);
+		return preg_match('/^[0-9\s' . self::escape($exceptions) . ']+$/', $input);
 	}
 
 	/**
@@ -1260,7 +1262,7 @@ class Formation {
 	public static function minHeight($input, $size = 0) {
 		return self::dimensions($input, 'minHeight', $size);
 	}
-	
+
 	/**
 	 * Validate an images width is above the minimum.
 	 *
@@ -1330,7 +1332,7 @@ class Formation {
 	 * @static
 	 */
 	public static function notEmpty($input) {
-		return ((string)$input != '');
+		return ((string) $input != '');
 	}
 
 }
