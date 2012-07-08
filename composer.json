@@ -1,0 +1,23 @@
+{
+	"name": "mjohnson/formation",
+	"type": "library",
+	"description": "A stand alone form manager, builder, validator and cleaner.",
+	"keywords": ["form", "builder", "validator"],
+	"homepage": "http://milesj.me/code/php/formation",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Miles Johnson",
+			"homepage": "http://milesj.me"
+		}
+	],
+	"require": {
+		"php": ">=5.2"
+	},
+	"support": {
+		"source": "https://github.com/milesj/php-formation"
+	},
+	"autoload": {
+		"psr-0": { "Formation": "formation" }
+	}
+}
