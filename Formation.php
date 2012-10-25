@@ -7,7 +7,7 @@
  * Furthermore, the system is split into 2 classes, Form which deals with building,
  * and Formation that contains static methods for validation.
  *
- * @version		3.2
+ * @version		3.2.1
  * @author      Miles Johnson - http://milesj.me
  * @copyright   Copyright 2006-2011, Miles Johnson, Inc.
  * @license     http://opensource.org/licenses/mit-license.php - Licensed under The MIT License
@@ -15,14 +15,6 @@
  */
 
 class Form {
-
-	/**
-	 * Current version.
-	 *
-	 * @access public
-	 * @var string
-	 */
-	public $version = '3.2';
 
 	/**
 	 * Array of cleaned values.

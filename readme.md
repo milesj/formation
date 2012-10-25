@@ -1,4 +1,4 @@
-# Formation v3.2 #
+# Formation v3.2.1 #
 
 A class that builds form elements and then validates their input values for errors.
 
