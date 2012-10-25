@@ -18,6 +18,6 @@
 		"source": "https://github.com/milesj/php-formation"
 	},
 	"autoload": {
-		"psr-0": { "Formation": "formation" }
+		"psr-0": { "mjohnson\\Formation": "" }
 	}
 }
