@@ -1,29 +1,21 @@
 <?php
 /**
- * Formation
- *
- * A class that builds form elements and then validates their input values for errors.
- * Once validated, a cleaned data result is returned, or an array of errors are returned.
- * Furthermore, the system is split into 2 classes, Form which deals with building,
- * and Formation that contains static methods for validation.
- *
- * @author      Miles Johnson - http://milesj.me
- * @copyright   Copyright 2006-2011, Miles Johnson, Inc.
- * @license     http://opensource.org/licenses/mit-license.php - Licensed under The MIT License
- * @link        http://milesj.me/code/php/formation
+ * @copyright	Copyright 2006-2012, Miles Johnson - http://milesj.me
+ * @license		http://opensource.org/licenses/mit-license.php - Licensed under the MIT License
+ * @link		http://milesj.me/code/php/formation
  */
 
 // Turn on error reporting
 error_reporting(E_ALL);
 
 function debug($var) {
-	echo '<pre>'. print_r($var, true) .'</pre>';
+	echo '<pre>' . print_r($var, true) . '</pre>';
 }
 
 // Include and initialize
-include_once '../formation/Formation.php';
+include_once '../Form.php';
 
-$form = new Form('User');
+$form = new \mjohnson\formation\Form('User');
 $options = array(
 	'red' => 'Red', 'green' => 'Green', 'blue' => 'Blue', 'yellow' => 'Yellow',
 	'orange' => 'Orange', 'black' => 'Black', 'white' => 'White'

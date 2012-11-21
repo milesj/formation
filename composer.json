@@ -12,12 +12,13 @@
 		}
 	],
 	"require": {
-		"php": ">=5.2"
+		"php": ">=5.3"
 	},
 	"support": {
 		"source": "https://github.com/milesj/php-formation"
 	},
 	"autoload": {
-		"psr-0": { "mjohnson\\Formation": "" }
-	}
+		"psr-0": { "mjohnson\\formation": "" }
+	},
+	"target-dir": "mjohnson/formation"
 }
