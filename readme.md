@@ -1,10 +1,11 @@
-# Formation v3.2.1 #
+# Formation v4.0.0 #
 
 A class that builds form elements and then validates their input values for errors.
 
 ## Requirements ##
 
-* PHP 5.2.x
+* PHP 5.3+ - v4.x
+* PHP 5.2+ - v3.x
 * Multibyte String - http://php.net/manual/book.mbstring.php
 
 ## Features ##

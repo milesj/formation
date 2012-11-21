@@ -12,7 +12,7 @@ use \Exception;
 /**
  * Contains static validation methods.
  *
- * @version	3.2.1
+ * @version	4.0.0
  * @package	mjohnson.formation
  */
 class Formation {

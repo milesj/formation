@@ -15,7 +15,7 @@ require_once 'Formation.php';
  * A class that builds form elements and then validates their input values for errors.
  * Once validated, a cleaned data result is returned, or an array of errors are returned.
  *
- * @version	3.2.1
+ * @version	4.0.0
  * @package	mjohnson.formation
  */
 class Form {
